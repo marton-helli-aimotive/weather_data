@@ -164,7 +164,7 @@ data/
 logs/
 *.duckdb
 *.sqlite
-.streamlit/
+.dash/
 
 # OS-specific files
 .DS_Store

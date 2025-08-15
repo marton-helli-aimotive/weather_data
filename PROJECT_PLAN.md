@@ -111,7 +111,7 @@ The milestones are designed to:
 
 ### Technical Decisions
 1. **Database Choice**: PostgreSQL, SQLite, or just in-memory storage? Answer: PostgreSQL
-2. **Dashboard Framework**: Streamlit vs Dash - any preference? Answer: Streamlit
+2. **Dashboard Framework**: Streamlit vs Dash - any preference? Answer: Dash
 3. **Deployment Target**: Local containers only or cloud deployment needed? Answer: local
 4. **Monitoring Level**: Basic health checks or full observability stack? Answer: basic
 

@@ -36,7 +36,7 @@ Build a comprehensive weather data pipeline using modern Python practices and da
 - Add **data caching strategies** with Redis integration
 
 ### 5. Interactive Visualizations & Dashboard
-- Create a **Streamlit/Dash dashboard** with real-time updates
+- Create a **Dash dashboard** with real-time updates
 - Implement **interactive plots** using Plotly with:
   - Time series with zoom/pan capabilities
   - Geographic heatmaps and choropleth maps
@@ -74,7 +74,7 @@ Build a comprehensive weather data pipeline using modern Python practices and da
 - **Pydantic v2**: Data validation and settings
 - **Polars**: High-performance DataFrame library
 - **FastAPI**: API framework (if building web service)
-- **Streamlit/Panel**: Interactive dashboard
+- **Dash**: Interactive dashboard
 - **Plotly/Altair**: Modern visualization libraries
 
 ### Data & Analytics

@@ -16,7 +16,7 @@ Create a comprehensive, real-time dashboard with interactive visualizations, use
 ## Key Tasks
 
 ### 4.1 Dashboard Framework Setup
-- Choose between Streamlit and Dash (recommend Streamlit for rapid development)
+- Using Dash for interactive dashboard development
 - Set up application structure and routing
 - Implement responsive layout design
 - Add custom CSS styling
