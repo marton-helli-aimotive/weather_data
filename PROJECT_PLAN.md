@@ -77,6 +77,9 @@ The milestones are designed to:
 
 ### External Services
 - Weather API providers (7timer, OpenWeatherMap, WeatherAPI)
+  - 7timer key is: not required
+  - WeatherAPI key is: 0e919c6354e74601a7b131057251508
+  - OpenWeatherMap key is: currently unavailable
 - Redis for caching (can be mocked for development)
 
 ### Development Requirements
@@ -101,21 +104,21 @@ The milestones are designed to:
 ## Potential Ambiguities & Clarifications Needed
 
 ### Scope Clarifications
-1. **Dashboard Authentication**: Should this include user registration or just login?
-2. **Data Persistence**: Do we need long-term data storage (database) or in-memory is sufficient?
-3. **Real-time Requirements**: What's the acceptable delay for "real-time" updates?
-4. **API Rate Limits**: Should we implement paid API tiers or focus on free tiers?
+1. **Dashboard Authentication**: Should this include user registration or just login? Answer: just login
+2. **Data Persistence**: Do we need long-term data storage (database) or in-memory is sufficient? Answer: long-term data storage
+3. **Real-time Requirements**: What's the acceptable delay for "real-time" updates? Answer: Up to you
+4. **API Rate Limits**: Should we implement paid API tiers or focus on free tiers? Answer: free
 
 ### Technical Decisions
-1. **Database Choice**: PostgreSQL, SQLite, or just in-memory storage?
-2. **Dashboard Framework**: Streamlit vs Dash - any preference?
-3. **Deployment Target**: Local containers only or cloud deployment needed?
-4. **Monitoring Level**: Basic health checks or full observability stack?
+1. **Database Choice**: PostgreSQL, SQLite, or just in-memory storage? Answer: PostgreSQL
+2. **Dashboard Framework**: Streamlit vs Dash - any preference? Answer: Streamlit
+3. **Deployment Target**: Local containers only or cloud deployment needed? Answer: local
+4. **Monitoring Level**: Basic health checks or full observability stack? Answer: basic
 
 ### Feature Priorities
-1. Which advanced features from `bonus_tasks.md` should be included in scope?
-2. Should machine learning predictions be included or kept as future enhancement?
-3. How comprehensive should the geospatial analysis be?
+1. Which advanced features from `bonus_tasks.md` should be included in scope? Answer: None yet
+2. Should machine learning predictions be included or kept as future enhancement? Answer: Not yet
+3. How comprehensive should the geospatial analysis be? Answer: Basic
 
 ## Next Steps
 
