@@ -134,7 +134,7 @@ class WeatherAlert(BaseModel):
     tags: list[str] = Field(default_factory=list, description="Alert tags")
     
     provider: WeatherProvider = Field(..., description="Alert source provider")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(datetime.timezone.utc))
 
 
 class LocationInfo(BaseModel):
@@ -167,7 +167,8 @@ class DataQualityMetrics(BaseModel):
     quality_score: float = Field(ge=0.0, le=1.0, description="Overall quality score")
     
     # Timestamps
-    assessment_time: datetime = Field(default_factory=datetime.utcnow)
+    from datetime import timezone
+    assessment_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     data_time_range_start: Optional[datetime] = Field(None)
     data_time_range_end: Optional[datetime] = Field(None)
     

@@ -43,7 +43,14 @@ def config() -> None:
     table.add_row("App Version", settings.app_version)
     
     # API settings
-    table.add_row("WeatherAPI Key", "***" + settings.api.weatherapi_key[-4:] if settings.api.weatherapi_key else "Not Set")
+    table.add_row(
+        "WeatherAPI Key",
+        (
+            "***" + settings.api.weatherapi_key[-4:]
+            if settings.api.weatherapi_key and len(settings.api.weatherapi_key) >= 4
+            else "***" if settings.api.weatherapi_key else "Not Set"
+        )
+    )
     table.add_row("OpenWeather Key", "Set" if settings.api.openweather_api_key else "Not Set")
     table.add_row("Rate Limit", str(settings.api.rate_limit_requests))
     

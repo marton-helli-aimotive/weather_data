@@ -44,8 +44,8 @@ class APISettings(BaseSettings):
         default=None,
         description="OpenWeatherMap API key"
     )
-    weatherapi_key: str = Field(
-        default="0e919c6354e74601a7b131057251508",
+    weatherapi_key: Optional[str] = Field(
+        default=None,
         description="WeatherAPI key"
     )
     
