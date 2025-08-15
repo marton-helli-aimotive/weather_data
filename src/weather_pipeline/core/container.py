@@ -107,3 +107,28 @@ def get_service(service_type: Type[T]) -> T:
 def get_optional_service(service_type: Type[T]) -> Optional[T]:
     """Get an optional service from the global container."""
     return _container.get_optional(service_type)
+
+
+def register_processing_services() -> None:
+    """Register all processing-related services."""
+    from ..processing.time_series import TimeSeriesAnalyzer
+    from ..processing.geospatial import GeospatialAnalyzer
+    from ..processing.feature_engineering import FeatureEngineer
+    from ..processing.data_quality import DataQualityMonitor
+    from ..processing.streaming import StreamProcessor, StreamingPipeline
+    from ..processing.cache_manager import CacheManager, MemoryCache
+    from ..processing.performance import PerformanceComparator
+    
+    # Register processing services as transients (new instance each time)
+    register_transient(TimeSeriesAnalyzer, TimeSeriesAnalyzer)
+    register_transient(GeospatialAnalyzer, GeospatialAnalyzer)
+    register_transient(FeatureEngineer, FeatureEngineer)
+    register_transient(DataQualityMonitor, DataQualityMonitor)
+    register_transient(PerformanceComparator, PerformanceComparator)
+    
+    # Register streaming services
+    register_factory(StreamProcessor, lambda: StreamProcessor())
+    register_factory(StreamingPipeline, lambda: StreamingPipeline())
+    
+    # Register cache services
+    register_factory(CacheManager, lambda: CacheManager(MemoryCache()))
