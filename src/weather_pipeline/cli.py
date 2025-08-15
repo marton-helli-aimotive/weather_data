@@ -148,6 +148,41 @@ def check() -> None:
     console.print(health_table)
 
 
+@app.command()
+def dashboard(
+    host: str = typer.Option("127.0.0.1", help="Host to bind to"),
+    port: int = typer.Option(8050, help="Port to bind to"),
+    debug: bool = typer.Option(False, help="Enable debug mode"),
+) -> None:
+    """Launch the interactive weather dashboard."""
+    configure_logging()
+    logger = get_logger("dashboard")
+    
+    console.print("[yellow]Starting weather dashboard...[/yellow]")
+    
+    try:
+        # Import here to avoid importing Dash when not needed
+        from .dashboard.app import create_dashboard_app
+        
+        # Get the dependency injection container
+        container = get_container()
+        
+        # Create and run the dashboard
+        dashboard_app = create_dashboard_app(container)
+        
+        console.print(f"[green]✓[/green] Dashboard starting on http://{host}:{port}")
+        console.print("[blue]Press Ctrl+C to stop the dashboard[/blue]")
+        
+        dashboard_app.run(debug=debug, host=host, port=port)
+        
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Dashboard stopped by user[/yellow]")
+    except Exception as e:
+        logger.error(f"Failed to start dashboard: {e}")
+        console.print(f"[red]✗ Failed to start dashboard: {e}[/red]")
+        raise typer.Exit(1)
+
+
 def main() -> None:
     """Main CLI entry point."""
     app()
