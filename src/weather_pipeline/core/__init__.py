@@ -11,6 +11,21 @@ from .container import (
     register_transient,
 )
 from .logging import configure_logging, get_logger, LogContext, log_api_request, log_data_processing, log_function_call
+from .circuit_breaker import (
+    CircuitBreaker,
+    CircuitBreakerConfig,
+    CircuitBreakerError,
+    CircuitBreakerState,
+    circuit_breaker_registry,
+)
+from .resilience import (
+    RateLimiter,
+    RateLimiterConfig,
+    RetryConfig,
+    RetryHandler,
+    ResilientAPIClient,
+    rate_limiter_registry,
+)
 
 __all__ = [
     # Logging
@@ -30,4 +45,19 @@ __all__ = [
     "register_factory",
     "register_singleton",
     "register_transient",
+    
+    # Circuit Breaker
+    "CircuitBreaker",
+    "CircuitBreakerConfig", 
+    "CircuitBreakerError",
+    "CircuitBreakerState",
+    "circuit_breaker_registry",
+    
+    # Resilience
+    "RateLimiter",
+    "RateLimiterConfig",
+    "RetryConfig",
+    "RetryHandler",
+    "ResilientAPIClient",
+    "rate_limiter_registry",
 ]
