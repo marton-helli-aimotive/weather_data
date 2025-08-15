@@ -9,6 +9,7 @@ Your first job is to:
 2. Break the task into clear, ordered milestones with brief descriptions and success criteria for each.
 3. Identify dependencies between milestones and any potential ambiguities or missing details that might need clarification.
 4. Suggest an optimal development order to reduce risk and allow for early validation.
+5. Store the milestone plans as separate github instruction files for later use.
 
 Important constraints:
 - Do not start writing any implementation code yet.
