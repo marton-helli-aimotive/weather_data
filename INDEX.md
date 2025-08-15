@@ -28,13 +28,16 @@ Purpose: Provide an ordered plan, dependencies, success criteria, and open quest
 - Start with quality gates (M01), then deliver a working vertical slice (M02/M04/M03) to prove the architecture. Expand providers (M05), then data quality (M06) and processing depth (M07), followed by cache (M08) and streaming (M09). Add UI (M10), deepen tests/observability (M11/M12), and package/deploy (M13). Wrap with docs and perf (M14).
 
 ## Open Questions (confirm before coding)
-1. Dashboard choice: Streamlit vs Dash? Default: Streamlit.
-2. Which additional provider(s) beyond 7timer: OpenWeatherMap, WeatherAPI, or both? Keys available?
-3. Provider rate limits/backoff specifics to honor?
-4. Data freshness thresholds/SLA per city/provider?
-5. Dashboard auth: basic password vs OAuth/SSO?
-6. Approve Redis and DuckDB for local dev (via podman-compose)?
-7. Dependency manager preference: uv vs pip/venv; Python version constraints?
-8. Ensure Docker compatibility in addition to Podman?
-9. Geospatial basemap access policy (online vs local)? Regions of interest?
-10. Performance targets for ingestion latency and dashboard update cadence?
+1. Dashboard choice: Streamlit vs Dash? Answer: Streamlit.
+2. Which additional provider(s) beyond 7timer: OpenWeatherMap, WeatherAPI, or both? Keys available? Answer:
+  - 7timer key is: not required
+  - WeatherAPI key is: 0e919c6354e74601a7b131057251508
+  - OpenWeatherMap key is: currently unavailable
+3. Provider rate limits/backoff specifics to honor? Answer: must remain within free limits
+4. Data freshness thresholds/SLA per city/provider? Answer: up to you
+5. Dashboard auth: basic password vs OAuth/SSO? Answer: basic password
+6. Approve Redis and DuckDB for local dev (via podman-compose)? Answer: yes
+7. Dependency manager preference: uv vs pip/venv; Python version constraints? Answer: uv, python 3.11+
+8. Ensure Docker compatibility in addition to Podman? Answer: not necessary
+9. Geospatial basemap access policy (online vs local)? Regions of interest? Answer: up to you, roi = Budapest
+10. Performance targets for ingestion latency and dashboard update cadence? Answer: up to you
