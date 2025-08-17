@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import io
 import logging
 from datetime import datetime
@@ -42,25 +43,35 @@ class ExportManager:
             # Create Excel file in memory
             output = io.BytesIO()
             
-            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                # Main data sheet
-                df.to_excel(writer, sheet_name='Weather Data', index=False)
+            # Use simpler Excel writer to avoid formatting issues
+            try:
+                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    # Main data sheet
+                    df.to_excel(writer, sheet_name='Weather Data', index=False)
+                    
+                    # Summary statistics sheet
+                    summary_df = self._create_summary_statistics(df)
+                    summary_df.to_excel(writer, sheet_name='Summary Statistics', index=True)
+                    
+                    # City comparison sheet
+                    if 'city' in df.columns:
+                        city_comparison = self._create_city_comparison(df)
+                        city_comparison.to_excel(writer, sheet_name='City Comparison', index=True)
                 
-                # Summary statistics sheet
-                summary_df = self._create_summary_statistics(df)
-                summary_df.to_excel(writer, sheet_name='Summary Statistics', index=True)
-                
-                # City comparison sheet
-                if 'city' in df.columns:
-                    city_comparison = self._create_city_comparison(df)
-                    city_comparison.to_excel(writer, sheet_name='City Comparison', index=True)
-                
-                # Get workbook and worksheet objects for formatting
-                workbook = writer.book
-                worksheet = writer.sheets['Weather Data']
-                
-                # Add formatting
-                self._format_excel_worksheet(workbook, worksheet, df)
+            except ImportError:
+                # Fallback to xlsxwriter if openpyxl not available
+                with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                    # Main data sheet
+                    df.to_excel(writer, sheet_name='Weather Data', index=False)
+                    
+                    # Summary statistics sheet
+                    summary_df = self._create_summary_statistics(df)
+                    summary_df.to_excel(writer, sheet_name='Summary Statistics', index=True)
+                    
+                    # City comparison sheet
+                    if 'city' in df.columns:
+                        city_comparison = self._create_city_comparison(df)
+                        city_comparison.to_excel(writer, sheet_name='City Comparison', index=True)
             
             output.seek(0)
             
@@ -68,15 +79,33 @@ class ExportManager:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"weather_data_report_{timestamp}.xlsx"
             
+            # Encode binary data to base64 for JSON serialization
+            content_b64 = base64.b64encode(output.getvalue()).decode('utf-8')
+            
             return {
-                "content": output.getvalue(),
+                "content": content_b64,
                 "filename": filename,
+                "base64": True,
                 "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             }
             
         except Exception as e:
-            logger.error(f"Failed to export Excel report: {e}")
-            return {}
+            logger.error(f"Failed to export Excel report: {e}", exc_info=True)
+            # Return a simple fallback CSV instead of empty dict
+            try:
+                df = pd.DataFrame(data)
+                csv_content = df.to_csv(index=False)
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"weather_data_fallback_{timestamp}.csv"
+                
+                return {
+                    "content": csv_content,
+                    "filename": filename,
+                    "type": "text/csv"
+                }
+            except Exception as fallback_error:
+                logger.error(f"Fallback CSV export also failed: {fallback_error}")
+                return {}
     
     def export_pdf_report(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Export weather data to PDF format.
@@ -105,15 +134,50 @@ class ExportManager:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"weather_data_report_{timestamp}.html"
             
+            # Encode to base64 for JSON serialization
+            content_b64 = base64.b64encode(html_content.encode('utf-8')).decode('utf-8')
+            
             return {
-                "content": html_content.encode('utf-8'),
+                "content": content_b64,
                 "filename": filename,
+                "base64": True,
                 "type": "text/html"
             }
             
         except Exception as e:
-            logger.error(f"Failed to export PDF report: {e}")
-            return {}
+            logger.error(f"Failed to export PDF report: {e}", exc_info=True)
+            # Return a simple text report instead of empty dict
+            try:
+                df = pd.DataFrame(data)
+                # Create simple text summary
+                summary = f"""Weather Data Report (Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+                
+Data Summary:
+- Total records: {len(df)}
+- Cities: {', '.join(df['city'].unique()) if 'city' in df.columns else 'N/A'}
+- Date range: {df['timestamp'].min()} to {df['timestamp'].max() if 'timestamp' in df.columns else 'N/A'}
+
+Temperature Statistics:
+- Average: {df['temperature'].mean():.1f}°C
+- Min: {df['temperature'].min():.1f}°C  
+- Max: {df['temperature'].max():.1f}°C
+                """
+                
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"weather_summary_{timestamp}.txt"
+                
+                # Encode to base64 for JSON serialization
+                content_b64 = base64.b64encode(summary.encode('utf-8')).decode('utf-8')
+                
+                return {
+                    "content": content_b64,
+                    "filename": filename,
+                    "base64": True,
+                    "type": "text/plain"
+                }
+            except Exception as fallback_error:
+                logger.error(f"Fallback text export also failed: {fallback_error}")
+                return {}
     
     def export_csv_data(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Export weather data to CSV format.

@@ -40,6 +40,26 @@ class DashboardDataManager:
             'beijing': Coordinates(latitude=39.9042, longitude=116.4074),
             'mumbai': Coordinates(latitude=19.0760, longitude=72.8777),
             'rio_de_janeiro': Coordinates(latitude=-22.9068, longitude=-43.1729),
+            'los_angeles': Coordinates(latitude=34.0522, longitude=-118.2437),
+            'mexico_city': Coordinates(latitude=19.4326, longitude=-99.1332),
+            'toronto': Coordinates(latitude=43.6532, longitude=-79.3832),
+            'amsterdam': Coordinates(latitude=52.3676, longitude=4.9041),
+            'stockholm': Coordinates(latitude=59.3293, longitude=18.0686),
+            'rome': Coordinates(latitude=41.9028, longitude=12.4964),
+            'madrid': Coordinates(latitude=40.4168, longitude=-3.7038),
+            'vienna': Coordinates(latitude=48.2082, longitude=16.3738),
+            'prague': Coordinates(latitude=50.0755, longitude=14.4378),
+            'warsaw': Coordinates(latitude=52.2297, longitude=21.0122),
+            'bangkok': Coordinates(latitude=13.7563, longitude=100.5018),
+            'singapore': Coordinates(latitude=1.3521, longitude=103.8198),
+            'seoul': Coordinates(latitude=37.5665, longitude=126.9780),
+            'hong_kong': Coordinates(latitude=22.3193, longitude=114.1694),
+            'dubai': Coordinates(latitude=25.2048, longitude=55.2708),
+            'istanbul': Coordinates(latitude=41.0082, longitude=28.9784),
+            'cairo': Coordinates(latitude=30.0444, longitude=31.2357),
+            'cape_town': Coordinates(latitude=-33.9249, longitude=18.4241),
+            'buenos_aires': Coordinates(latitude=-34.6118, longitude=-58.3960),
+            'santiago': Coordinates(latitude=-33.4489, longitude=-70.6693),
         }
         
         # City display names
@@ -48,6 +68,32 @@ class DashboardDataManager:
             'london': 'London, UK',
             'tokyo': 'Tokyo, JP',
             'sydney': 'Sydney, AU',
+            'paris': 'Paris, FR',
+            'berlin': 'Berlin, DE',
+            'moscow': 'Moscow, RU',
+            'beijing': 'Beijing, CN',
+            'mumbai': 'Mumbai, IN',
+            'rio_de_janeiro': 'Rio de Janeiro, BR',
+            'los_angeles': 'Los Angeles, CA',
+            'mexico_city': 'Mexico City, MX',
+            'toronto': 'Toronto, CA',
+            'amsterdam': 'Amsterdam, NL',
+            'stockholm': 'Stockholm, SE',
+            'rome': 'Rome, IT',
+            'madrid': 'Madrid, ES',
+            'vienna': 'Vienna, AT',
+            'prague': 'Prague, CZ',
+            'warsaw': 'Warsaw, PL',
+            'bangkok': 'Bangkok, TH',
+            'singapore': 'Singapore, SG',
+            'seoul': 'Seoul, KR',
+            'hong_kong': 'Hong Kong, HK',
+            'dubai': 'Dubai, AE',
+            'istanbul': 'Istanbul, TR',
+            'cairo': 'Cairo, EG',
+            'cape_town': 'Cape Town, ZA',
+            'buenos_aires': 'Buenos Aires, AR',
+            'santiago': 'Santiago, CL',
             'paris': 'Paris, FR',
             'berlin': 'Berlin, DE',
             'moscow': 'Moscow, RU',
@@ -155,36 +201,57 @@ class DashboardDataManager:
         current = start_date
         hour_count = 0
         
-        # Base climate parameters per city
+        # Base climate parameters per city (August values in Celsius)
         city_climate = {
-            'new_york': {'temp_base': 15, 'temp_range': 25, 'humidity_base': 60},
-            'london': {'temp_base': 12, 'temp_range': 15, 'humidity_base': 70},
-            'tokyo': {'temp_base': 16, 'temp_range': 20, 'humidity_base': 65},
-            'sydney': {'temp_base': 20, 'temp_range': 15, 'humidity_base': 55},
-            'paris': {'temp_base': 14, 'temp_range': 18, 'humidity_base': 65},
-            'berlin': {'temp_base': 10, 'temp_range': 20, 'humidity_base': 65},
-            'moscow': {'temp_base': 5, 'temp_range': 30, 'humidity_base': 70},
-            'beijing': {'temp_base': 12, 'temp_range': 35, 'humidity_base': 55},
-            'mumbai': {'temp_base': 28, 'temp_range': 8, 'humidity_base': 80},
-            'rio_de_janeiro': {'temp_base': 25, 'temp_range': 10, 'humidity_base': 75},
+            'new_york': {'temp_base': 26, 'temp_range': 8, 'humidity_base': 70},      # Hot August in NYC
+            'london': {'temp_base': 22, 'temp_range': 6, 'humidity_base': 65},       # Warm August in London
+            'tokyo': {'temp_base': 28, 'temp_range': 7, 'humidity_base': 75},        # Hot and humid August
+            'sydney': {'temp_base': 15, 'temp_range': 8, 'humidity_base': 55},       # Winter in Sydney (Southern Hemisphere)
+            'paris': {'temp_base': 25, 'temp_range': 8, 'humidity_base': 60},        # Hot August in Paris
+            'berlin': {'temp_base': 24, 'temp_range': 7, 'humidity_base': 60},       # Warm August in Berlin
+            'moscow': {'temp_base': 20, 'temp_range': 8, 'humidity_base': 65},       # Mild August in Moscow
+            'beijing': {'temp_base': 27, 'temp_range': 9, 'humidity_base': 70},      # Hot August in Beijing
+            'mumbai': {'temp_base': 29, 'temp_range': 4, 'humidity_base': 85},       # Monsoon season, hot and humid
+            'rio_de_janeiro': {'temp_base': 23, 'temp_range': 6, 'humidity_base': 70}, # Winter in Rio (Southern Hemisphere)
+            'los_angeles': {'temp_base': 24, 'temp_range': 6, 'humidity_base': 55},   # Warm, dry August
+            'mexico_city': {'temp_base': 22, 'temp_range': 7, 'humidity_base': 70},   # Rainy season
+            'toronto': {'temp_base': 25, 'temp_range': 8, 'humidity_base': 65},       # Warm August
+            'amsterdam': {'temp_base': 21, 'temp_range': 6, 'humidity_base': 70},     # Mild August
+            'stockholm': {'temp_base': 19, 'temp_range': 6, 'humidity_base': 65},     # Cool August
+            'rome': {'temp_base': 28, 'temp_range': 8, 'humidity_base': 55},          # Hot, dry August
+            'madrid': {'temp_base': 27, 'temp_range': 9, 'humidity_base': 45},        # Hot, dry August
+            'vienna': {'temp_base': 24, 'temp_range': 7, 'humidity_base': 60},        # Warm August
+            'prague': {'temp_base': 23, 'temp_range': 7, 'humidity_base': 65},        # Warm August
+            'warsaw': {'temp_base': 22, 'temp_range': 8, 'humidity_base': 65},        # Warm August
+            'bangkok': {'temp_base': 30, 'temp_range': 4, 'humidity_base': 80},       # Hot, humid, rainy
+            'singapore': {'temp_base': 28, 'temp_range': 3, 'humidity_base': 85},     # Hot and humid year-round
+            'seoul': {'temp_base': 27, 'temp_range': 8, 'humidity_base': 75},         # Hot, humid August
+            'hong_kong': {'temp_base': 29, 'temp_range': 5, 'humidity_base': 80},     # Hot, humid August
+            'dubai': {'temp_base': 35, 'temp_range': 6, 'humidity_base': 65},         # Very hot August
+            'istanbul': {'temp_base': 26, 'temp_range': 7, 'humidity_base': 60},      # Hot August
+            'cairo': {'temp_base': 32, 'temp_range': 8, 'humidity_base': 45},         # Very hot, dry August
+            'cape_town': {'temp_base': 16, 'temp_range': 6, 'humidity_base': 70},     # Winter (Southern Hemisphere)
+            'buenos_aires': {'temp_base': 14, 'temp_range': 8, 'humidity_base': 65},  # Winter (Southern Hemisphere)
+            'santiago': {'temp_base': 13, 'temp_range': 9, 'humidity_base': 60},      # Winter (Southern Hemisphere)
         }
         
         climate = city_climate.get(city, {'temp_base': 15, 'temp_range': 20, 'humidity_base': 60})
         
         while current <= end_date:
-            # Add some seasonality and daily patterns
+            # August temperature calculation (day 225-230 for mid-August)
             day_of_year = current.timetuple().tm_yday
             hour_of_day = current.hour
             
-            # Seasonal temperature variation
-            seasonal_temp = climate['temp_base'] + 10 * math.sin(2 * math.pi * day_of_year / 365)
+            # For August, reduce seasonal variation since we want consistent summer temps
+            # Use a smaller seasonal component for August (around day 225)
+            seasonal_offset = math.sin(2 * math.pi * (day_of_year - 225) / 365) * (climate['temp_range'] * 0.3)
             
-            # Daily temperature variation
-            daily_temp_variation = 5 * math.sin(2 * math.pi * hour_of_day / 24)
+            # Daily temperature variation (cooler at night, warmer in afternoon)
+            daily_temp_variation = (climate['temp_range'] * 0.4) * math.sin(2 * math.pi * (hour_of_day - 6) / 24)
             
-            # Add random noise
-            temp_noise = random.uniform(-3, 3)
-            temperature = seasonal_temp + daily_temp_variation + temp_noise
+            # Add random noise but keep it smaller
+            temp_noise = random.uniform(-2, 2)
+            temperature = climate['temp_base'] + seasonal_offset + daily_temp_variation + temp_noise
             
             # Humidity (inversely related to temperature somewhat)
             humidity = max(20, min(95, climate['humidity_base'] + random.uniform(-15, 15) - (temperature - climate['temp_base']) * 0.5))
@@ -254,6 +321,26 @@ class DashboardDataManager:
             'beijing': 'CN',
             'mumbai': 'IN',
             'rio_de_janeiro': 'BR',
+            'los_angeles': 'US',
+            'mexico_city': 'MX',
+            'toronto': 'CA',
+            'amsterdam': 'NL',
+            'stockholm': 'SE',
+            'rome': 'IT',
+            'madrid': 'ES',
+            'vienna': 'AT',
+            'prague': 'CZ',
+            'warsaw': 'PL',
+            'bangkok': 'TH',
+            'singapore': 'SG',
+            'seoul': 'KR',
+            'hong_kong': 'HK',
+            'dubai': 'AE',
+            'istanbul': 'TR',
+            'cairo': 'EG',
+            'cape_town': 'ZA',
+            'buenos_aires': 'AR',
+            'santiago': 'CL',
         }
         return country_mapping.get(city, 'UN')
     

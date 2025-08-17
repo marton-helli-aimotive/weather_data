@@ -124,7 +124,7 @@ def create_time_series_plot(data: List[Dict[str, Any]], parameters: List[str]) -
 
 
 def create_geographic_map(data: List[Dict[str, Any]]) -> go.Figure:
-    """Create an interactive geographic map with weather data.
+    """Create an enhanced interactive geographic map with weather data.
     
     Args:
         data: List of weather data points with coordinates
@@ -153,7 +153,7 @@ def create_geographic_map(data: List[Dict[str, Any]]) -> go.Figure:
             lambda x: x.get('longitude') if isinstance(x, dict) else None
         )
     else:
-        # Default coordinates for common cities
+        # Default coordinates for common cities (this should not happen with the new data manager)
         city_coords = {
             'new_york': {'lat': 40.7128, 'lon': -74.0060},
             'london': {'lat': 51.5074, 'lon': -0.1278},
@@ -173,32 +173,95 @@ def create_geographic_map(data: List[Dict[str, Any]]) -> go.Figure:
     # Create the map
     fig = go.Figure()
     
-    # Add temperature heatmap if available
+    # Add temperature contour/heatmap background
+    if 'temperature' in latest_data.columns and len(latest_data) > 3:
+        # Create a grid for interpolation
+        lat_min, lat_max = latest_data['lat'].min() - 5, latest_data['lat'].max() + 5
+        lon_min, lon_max = latest_data['lon'].min() - 5, latest_data['lon'].max() + 5
+        
+        # Create interpolated temperature surface
+        from scipy.interpolate import griddata
+        import numpy as np
+        
+        # Grid points for interpolation
+        grid_lat = np.linspace(lat_min, lat_max, 50)
+        grid_lon = np.linspace(lon_min, lon_max, 50)
+        grid_lon_mesh, grid_lat_mesh = np.meshgrid(grid_lon, grid_lat)
+        
+        # Interpolate temperature data
+        try:
+            grid_temp = griddata(
+                (latest_data['lon'], latest_data['lat']),
+                latest_data['temperature'],
+                (grid_lon_mesh, grid_lat_mesh),
+                method='cubic',
+                fill_value=latest_data['temperature'].mean()
+            )
+            
+            # Add temperature contour
+            fig.add_trace(
+                go.Densitymapbox(
+                    lat=grid_lat_mesh.flatten(),
+                    lon=grid_lon_mesh.flatten(),
+                    z=grid_temp.flatten(),
+                    radius=40,
+                    colorscale='RdYlBu_r',
+                    opacity=0.6,
+                    showscale=True,
+                    colorbar=dict(
+                        title="Temperature (°C)",
+                        x=0.02,
+                        len=0.7
+                    ),
+                    name="Temperature Field"
+                )
+            )
+        except ImportError:
+            # Fallback if scipy not available
+            pass
+    
+    # Add city markers with enhanced styling
     if 'temperature' in latest_data.columns:
+        # Size markers based on temperature (but keep reasonable range)
+        # Handle NaN values properly
+        temp_values = latest_data['temperature'].fillna(latest_data['temperature'].mean())
+        temp_min, temp_max = temp_values.min(), temp_values.max()
+        
+        # Avoid division by zero
+        if temp_max - temp_min > 0:
+            marker_size = ((temp_values - temp_min) / (temp_max - temp_min) * 15) + 10
+        else:
+            marker_size = [15] * len(temp_values)  # Default size if all temps are the same
+        
+        # Ensure no NaN values in marker_size
+        marker_size = marker_size.fillna(15)
+        
         fig.add_trace(
             go.Scattermapbox(
                 lat=latest_data['lat'],
                 lon=latest_data['lon'],
-                mode='markers',
+                mode='markers+text',
                 marker=dict(
-                    size=20,
+                    size=marker_size.tolist(),  # Convert to list to avoid NaN issues
                     color=latest_data['temperature'],
-                    colorscale='RdYlBu_r',
-                    colorbar=dict(
-                        title="Temperature (°C)",
-                        x=0.02
-                    ),
+                    colorscale='Viridis',
+                    opacity=0.8,
                     sizemode='diameter'
                 ),
                 text=latest_data['city'],
+                textposition="top center",
+                textfont=dict(size=10, color='black'),
                 hovertemplate=(
                     "<b>%{text}</b><br>"
-                    "Temperature: %{marker.color}°C<br>"
-                    "Lat: %{lat}<br>"
-                    "Lon: %{lon}<br>"
+                    "Temperature: %{marker.color:.1f}°C<br>"
+                    "Humidity: " + latest_data.get('humidity', pd.Series(['N/A'] * len(latest_data))).astype(str) + "%<br>"
+                    "Pressure: " + latest_data.get('pressure', pd.Series(['N/A'] * len(latest_data))).astype(str) + " hPa<br>"
+                    "Wind Speed: " + latest_data.get('wind_speed', pd.Series(['N/A'] * len(latest_data))).astype(str) + " m/s<br>"
+                    "Lat: %{lat:.2f}<br>"
+                    "Lon: %{lon:.2f}<br>"
                     "<extra></extra>"
                 ),
-                name="Temperature"
+                name="Weather Stations"
             )
         )
     else:
@@ -207,20 +270,22 @@ def create_geographic_map(data: List[Dict[str, Any]]) -> go.Figure:
             go.Scattermapbox(
                 lat=latest_data['lat'],
                 lon=latest_data['lon'],
-                mode='markers',
-                marker=dict(size=15, color='blue'),
+                mode='markers+text',
+                marker=dict(size=15, color='blue', opacity=0.8),
                 text=latest_data['city'],
+                textposition="top center",
+                textfont=dict(size=10, color='black'),
                 hovertemplate=(
                     "<b>%{text}</b><br>"
-                    "Lat: %{lat}<br>"
-                    "Lon: %{lon}<br>"
+                    "Lat: %{lat:.2f}<br>"
+                    "Lon: %{lon:.2f}<br>"
                     "<extra></extra>"
                 ),
                 name="Cities"
             )
         )
     
-    # Update layout
+    # Update layout with enhanced styling
     fig.update_layout(
         mapbox=dict(
             style="open-street-map",
@@ -228,28 +293,37 @@ def create_geographic_map(data: List[Dict[str, Any]]) -> go.Figure:
                 lat=latest_data['lat'].mean(),
                 lon=latest_data['lon'].mean()
             ),
-            zoom=2
+            zoom=1.5
         ),
-        height=600,
-        margin=dict(l=0, r=0, t=30, b=0),
+        height=700,
+        margin=dict(l=0, r=0, t=50, b=0),
         title={
-            'text': "Weather Data Geographic Distribution",
+            'text': "Global Weather Data Distribution",
             'x': 0.5,
-            'xanchor': 'center'
-        }
+            'xanchor': 'center',
+            'font': {'size': 16}
+        },
+        showlegend=True,
+        legend=dict(
+            x=0.02,
+            y=0.98,
+            bgcolor="rgba(255,255,255,0.8)",
+            bordercolor="rgba(0,0,0,0.2)",
+            borderwidth=1
+        )
     )
     
     return fig
 
 
 def create_3d_surface_plot(data: List[Dict[str, Any]]) -> go.Figure:
-    """Create a 3D surface plot showing relationships between weather parameters.
+    """Create enhanced 3D analysis showing meaningful weather relationships.
     
     Args:
         data: List of weather data points
         
     Returns:
-        Plotly figure with 3D surface visualization
+        Plotly figure with 3D analysis visualization
     """
     if not data:
         return go.Figure()
@@ -270,7 +344,7 @@ def create_3d_surface_plot(data: List[Dict[str, Any]]) -> go.Figure:
         )
     
     # Clean data - remove NaN values
-    clean_df = df[available_cols].dropna()
+    clean_df = df[available_cols + ['city']].dropna(subset=available_cols)
     
     if clean_df.empty or len(clean_df) < 3:
         return go.Figure().add_annotation(
@@ -280,79 +354,145 @@ def create_3d_surface_plot(data: List[Dict[str, Any]]) -> go.Figure:
             showarrow=False, font=dict(size=16)
         )
     
-    # Create 3D surface plot
+    fig = go.Figure()
+    
+    # Create multiple analysis views
     if len(available_cols) >= 3:
-        # Use temperature, pressure, humidity
+        # Main 3D scatter with climate zones
         x = clean_df['temperature']
         y = clean_df['pressure']
         z = clean_df['humidity']
         
-        # Create a mesh grid for surface
-        x_range = np.linspace(x.min(), x.max(), 20)
-        y_range = np.linspace(y.min(), y.max(), 20)
-        X, Y = np.meshgrid(x_range, y_range)
+        # Calculate comfort index (simplified)
+        comfort_index = []
+        for _, row in clean_df.iterrows():
+            temp = row['temperature']
+            humid = row['humidity']
+            # Simple comfort calculation (optimal around 22°C, 40-60% humidity)
+            temp_comfort = 100 - abs(temp - 22) * 3
+            humid_comfort = 100 - abs(humid - 50) * 1.5
+            comfort = (temp_comfort + humid_comfort) / 2
+            comfort_index.append(max(0, min(100, comfort)))
         
-        # Interpolate Z values
-        from scipy.interpolate import griddata
-        points = np.column_stack((x.values, y.values))
-        Z = griddata(points, z.values, (X, Y), method='linear', fill_value=z.mean())
-        
-        fig = go.Figure(data=[
-            go.Surface(
-                x=X, y=Y, z=Z,
-                colorscale='Viridis',
-                colorbar=dict(title="Humidity (%)")
-            )
-        ])
-        
-        # Add scatter points for actual data
+        # Add main 3D scatter plot
         fig.add_trace(
             go.Scatter3d(
                 x=x, y=y, z=z,
-                mode='markers',
+                mode='markers+text',
                 marker=dict(
-                    size=5,
-                    color=z,
-                    colorscale='Viridis',
-                    opacity=0.8
+                    size=8,
+                    color=comfort_index,
+                    colorscale='RdYlGn',
+                    colorbar=dict(
+                        title="Comfort Index",
+                        x=1.1,
+                        len=0.6
+                    ),
+                    opacity=0.8,
+                    line=dict(width=1, color='black')
                 ),
-                name="Data Points",
+                text=clean_df['city'],
+                textposition="top center",
+                name="Cities",
                 hovertemplate=(
-                    "Temperature: %{x}°C<br>"
-                    "Pressure: %{y} hPa<br>"
-                    "Humidity: %{z}%<br>"
+                    "<b>%{text}</b><br>"
+                    "Temperature: %{x:.1f}°C<br>"
+                    "Pressure: %{y:.1f} hPa<br>"
+                    "Humidity: %{z:.1f}%<br>"
+                    "Comfort Index: %{marker.color:.1f}<br>"
+                    "<extra></extra>"
+                )
+            )
+        )
+        
+        # Add climate zone boundaries (simplified)
+        try:
+            import numpy as np
+            # Create reference surfaces for climate zones
+            
+            # Ideal comfort zone (around 22°C, 1013 hPa, 50% humidity)
+            ideal_temp = np.full((10, 10), 22)
+            ideal_pressure = np.linspace(1000, 1025, 10)
+            ideal_humidity = np.linspace(40, 60, 10)
+            P_ideal, H_ideal = np.meshgrid(ideal_pressure, ideal_humidity)
+            
+            fig.add_trace(
+                go.Surface(
+                    x=ideal_temp,
+                    y=P_ideal,
+                    z=H_ideal,
+                    opacity=0.3,
+                    colorscale=[[0, 'lightgreen'], [1, 'lightgreen']],
+                    showscale=False,
+                    name="Comfort Zone"
+                )
+            )
+            
+        except ImportError:
+            pass  # Skip advanced visualization if numpy not available
+        
+        # Update layout for 3D scene
+        fig.update_layout(
+            title={
+                'text': "3D Weather Analysis: Climate Comfort Zones",
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': {'size': 16}
+            },
+            scene=dict(
+                xaxis_title="Temperature (°C)",
+                yaxis_title="Pressure (hPa)",
+                zaxis_title="Humidity (%)",
+                camera=dict(
+                    eye=dict(x=1.5, y=1.5, z=1.5)
+                ),
+                aspectmode='cube'
+            ),
+            height=700,
+            margin=dict(l=0, r=0, t=50, b=0),
+            showlegend=True,
+            legend=dict(
+                x=0.02,
+                y=0.98,
+                bgcolor="rgba(255,255,255,0.8)",
+                bordercolor="rgba(0,0,0,0.2)",
+                borderwidth=1
+            )
+        )
+        
+    else:
+        # Fallback to 2D plot if only 2 parameters available
+        x_col = available_cols[0]
+        y_col = available_cols[1]
+        
+        fig.add_trace(
+            go.Scatter(
+                x=clean_df[x_col],
+                y=clean_df[y_col],
+                mode='markers+text',
+                marker=dict(
+                    size=10,
+                    color=clean_df.index,
+                    colorscale='viridis',
+                    opacity=0.7
+                ),
+                text=clean_df['city'],
+                textposition="top center",
+                hovertemplate=(
+                    "<b>%{text}</b><br>"
+                    f"{x_col.replace('_', ' ').title()}: %{{x}}<br>"
+                    f"{y_col.replace('_', ' ').title()}: %{{y}}<br>"
                     "<extra></extra>"
                 )
             )
         )
         
         fig.update_layout(
-            title="3D Weather Parameter Relationships",
-            scene=dict(
-                xaxis_title="Temperature (°C)",
-                yaxis_title="Pressure (hPa)",
-                zaxis_title="Humidity (%)",
-                camera=dict(
-                    up=dict(x=0, y=0, z=1),
-                    center=dict(x=0, y=0, z=0),
-                    eye=dict(x=1.2, y=1.2, z=1.2)
-                )
-            ),
+            title=f"2D Analysis: {x_col.replace('_', ' ').title()} vs {y_col.replace('_', ' ').title()}",
+            xaxis_title=x_col.replace('_', ' ').title(),
+            yaxis_title=y_col.replace('_', ' ').title(),
             height=600
         )
-        
-    else:
-        # Fallback to 2D scatter if only 2 parameters available
-        x_col, y_col = available_cols[:2]
-        fig = px.scatter(
-            clean_df, x=x_col, y=y_col,
-            title=f"2D Relationship: {x_col.title()} vs {y_col.title()}",
-            labels={
-                x_col: f"{x_col.replace('_', ' ').title()}",
-                y_col: f"{y_col.replace('_', ' ').title()}"
-            }
-        )
-        fig.update_layout(height=600)
     
     return fig
 
