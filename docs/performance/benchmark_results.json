@@ -1,0 +1,1328 @@
+{
+  "1000_rows": {
+    "benchmark_timestamp": 1755467897.6726086,
+    "data_info": {
+      "shape": [
+        1000,
+        10
+      ],
+      "columns": [
+        "timestamp",
+        "city",
+        "temperature",
+        "humidity",
+        "pressure",
+        "latitude",
+        "longitude",
+        "wind_speed",
+        "precipitation",
+        "cloud_cover"
+      ],
+      "size_mb": 0.12565040588378906
+    },
+    "benchmarks": [
+      {
+        "operation": "basic_aggregation",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.003681999999874582,
+          "std_time_seconds": 0.0013938395636551393,
+          "min_time_seconds": 0.002591199998278171,
+          "max_time_seconds": 0.00564930000109598,
+          "avg_memory_mb": 0.19140625,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            5
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.008745666667285453,
+          "std_time_seconds": 0.010841375022285979,
+          "min_time_seconds": 0.0009855999996943865,
+          "max_time_seconds": 0.024077300000499235,
+          "avg_memory_mb": 1.8450520833333333,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            6
+          ]
+        },
+        "speedup_ratio": 0.42100849940321694,
+        "winner": "pandas"
+      },
+      {
+        "operation": "filtering",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0011653666661004536,
+          "std_time_seconds": 0.0004093537377293583,
+          "min_time_seconds": 0.0008419999976467807,
+          "max_time_seconds": 0.0017428999999538064,
+          "avg_memory_mb": 0.03515625,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            223,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0006980666670036347,
+          "std_time_seconds": 0.00030363351122030034,
+          "min_time_seconds": 0.00046149999980116263,
+          "max_time_seconds": 0.001126700000895653,
+          "avg_memory_mb": 0.21484375,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            223,
+            10
+          ]
+        },
+        "speedup_ratio": 1.6694203020789498,
+        "winner": "polars"
+      },
+      {
+        "operation": "sorting",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.003566033332996691,
+          "std_time_seconds": 0.003129507025134553,
+          "min_time_seconds": 0.001210700000228826,
+          "max_time_seconds": 0.007988699999259552,
+          "avg_memory_mb": 0.12760416666666666,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0007180666664983922,
+          "std_time_seconds": 0.00011388328291086674,
+          "min_time_seconds": 0.0005711000012524892,
+          "max_time_seconds": 0.0008486000006087124,
+          "avg_memory_mb": 0.2109375,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            10
+          ]
+        },
+        "speedup_ratio": 4.966159131694878,
+        "winner": "polars"
+      },
+      {
+        "operation": "rolling_mean",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0008314666665683035,
+          "std_time_seconds": 0.00011935497140843074,
+          "min_time_seconds": 0.0007431999983964488,
+          "max_time_seconds": 0.0010002000017266255,
+          "avg_memory_mb": 0.033854166666666664,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            11
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0003077000001212582,
+          "std_time_seconds": 3.500695070113156e-05,
+          "min_time_seconds": 0.00027350000164005905,
+          "max_time_seconds": 0.0003557999989425298,
+          "avg_memory_mb": 0.08723958333333333,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            11
+          ]
+        },
+        "speedup_ratio": 2.7021991103043215,
+        "winner": "polars"
+      },
+      {
+        "operation": "column_operations",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.001239433334073207,
+          "std_time_seconds": 7.140991137695846e-05,
+          "min_time_seconds": 0.0011640000011539087,
+          "max_time_seconds": 0.0013352999994822312,
+          "avg_memory_mb": 0.005208333333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0004210666678166793,
+          "std_time_seconds": 4.9231721190753225e-05,
+          "min_time_seconds": 0.00035149999894201756,
+          "max_time_seconds": 0.0004583000009006355,
+          "avg_memory_mb": 0.033854166666666664,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            13
+          ]
+        },
+        "speedup_ratio": 2.943556041849463,
+        "winner": "polars"
+      },
+      {
+        "operation": "datetime_operations",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.004872333333575322,
+          "std_time_seconds": 0.0002647360217776339,
+          "min_time_seconds": 0.004623100001481362,
+          "max_time_seconds": 0.005238899997493718,
+          "avg_memory_mb": 0.10026041666666667,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.00047233333195132826,
+          "std_time_seconds": 6.84577882178845e-05,
+          "min_time_seconds": 0.0004126999992877245,
+          "max_time_seconds": 0.0005681999973603524,
+          "avg_memory_mb": 0.061197916666666664,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            13
+          ]
+        },
+        "speedup_ratio": 10.315455217709246,
+        "winner": "polars"
+      },
+      {
+        "operation": "missing_value_handling",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0022025333334264965,
+          "std_time_seconds": 0.0002647990716216126,
+          "min_time_seconds": 0.001986900002520997,
+          "max_time_seconds": 0.0025754999987839255,
+          "avg_memory_mb": 0.028645833333333332,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.00040653333538405906,
+          "std_time_seconds": 9.36231571258513e-05,
+          "min_time_seconds": 0.0003336000008857809,
+          "max_time_seconds": 0.0005387000019254629,
+          "avg_memory_mb": 0.0234375,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1000,
+            10
+          ]
+        },
+        "speedup_ratio": 5.417841888281376,
+        "winner": "polars"
+      },
+      {
+        "operation": "quantile_calculation",
+        "data_shape": [
+          1000,
+          10
+        ],
+        "data_size_mb": 0.12565040588378906,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0011174000016277812,
+          "std_time_seconds": 1.7892084603968082e-05,
+          "min_time_seconds": 0.0010932000004686415,
+          "max_time_seconds": 0.0011359000018273946,
+          "avg_memory_mb": 0.015625,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            3,
+            3
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0004947333327436354,
+          "std_time_seconds": 5.08976953353871e-05,
+          "min_time_seconds": 0.0004493000014917925,
+          "max_time_seconds": 0.0005657999972754624,
+          "avg_memory_mb": 0.026041666666666668,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1,
+            6
+          ]
+        },
+        "speedup_ratio": 2.2585904924396996,
+        "winner": "polars"
+      }
+    ],
+    "summary": {
+      "total_benchmarks": 8,
+      "pandas_wins": 1,
+      "polars_wins": 7,
+      "average_speedup_ratio": 3.836778835470144,
+      "median_speedup_ratio": 2.822877576076892,
+      "overall_winner": "polars"
+    }
+  },
+  "5000_rows": {
+    "benchmark_timestamp": 1755467900.0988138,
+    "data_info": {
+      "shape": [
+        5000,
+        10
+      ],
+      "columns": [
+        "timestamp",
+        "city",
+        "temperature",
+        "humidity",
+        "pressure",
+        "latitude",
+        "longitude",
+        "wind_speed",
+        "precipitation",
+        "cloud_cover"
+      ],
+      "size_mb": 0.6277017593383789
+    },
+    "benchmarks": [
+      {
+        "operation": "basic_aggregation",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0031648000003769994,
+          "std_time_seconds": 0.0002896472443072947,
+          "min_time_seconds": 0.0028008000008412637,
+          "max_time_seconds": 0.0035094999984721653,
+          "avg_memory_mb": -0.036458333333333336,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            5
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.001424633332741602,
+          "std_time_seconds": 0.00015182484253390435,
+          "min_time_seconds": 0.0012614999977813568,
+          "max_time_seconds": 0.0016271000022243243,
+          "avg_memory_mb": 0.24869791666666666,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            6
+          ]
+        },
+        "speedup_ratio": 2.221483891779069,
+        "winner": "polars"
+      },
+      {
+        "operation": "filtering",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0009573999996064231,
+          "std_time_seconds": 4.491080070566653e-05,
+          "min_time_seconds": 0.000905699998838827,
+          "max_time_seconds": 0.0010151999995287042,
+          "avg_memory_mb": 0.0026041666666666665,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1021,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.00047313333440494415,
+          "std_time_seconds": 4.511661326885891e-05,
+          "min_time_seconds": 0.00041740000233403407,
+          "max_time_seconds": 0.0005278999997244682,
+          "avg_memory_mb": 0.0390625,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1021,
+            10
+          ]
+        },
+        "speedup_ratio": 2.0235310640509763,
+        "winner": "polars"
+      },
+      {
+        "operation": "sorting",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0022006666658853646,
+          "std_time_seconds": 0.0003177964811336253,
+          "min_time_seconds": 0.0018763999978546053,
+          "max_time_seconds": 0.0026323000020056497,
+          "avg_memory_mb": 0.1015625,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0012102999996083479,
+          "std_time_seconds": 0.00017268763657496956,
+          "min_time_seconds": 0.0009726999996928498,
+          "max_time_seconds": 0.0013779999972030055,
+          "avg_memory_mb": 0.5078125,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "speedup_ratio": 1.818281968600759,
+        "winner": "polars"
+      },
+      {
+        "operation": "rolling_mean",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.001101099999990159,
+          "std_time_seconds": 9.522478626878818e-05,
+          "min_time_seconds": 0.0009933000001183245,
+          "max_time_seconds": 0.0012248999992152676,
+          "avg_memory_mb": 0.09244791666666667,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            11
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0002474333329397875,
+          "std_time_seconds": 1.774341989114024e-05,
+          "min_time_seconds": 0.0002274999969813507,
+          "max_time_seconds": 0.0002706000013859011,
+          "avg_memory_mb": 0.0013020833333333333,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            11
+          ]
+        },
+        "speedup_ratio": 4.450087572712404,
+        "winner": "polars"
+      },
+      {
+        "operation": "column_operations",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0013180333347312019,
+          "std_time_seconds": 0.00013717080168183693,
+          "min_time_seconds": 0.0011468000011518598,
+          "max_time_seconds": 0.001482600000599632,
+          "avg_memory_mb": 0.024739583333333332,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0004179999984141129,
+          "std_time_seconds": 1.8784213642010348e-05,
+          "min_time_seconds": 0.0003952999977627769,
+          "max_time_seconds": 0.00044129999878350645,
+          "avg_memory_mb": 0.052083333333333336,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "speedup_ratio": 3.153189807970825,
+        "winner": "polars"
+      },
+      {
+        "operation": "datetime_operations",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.012522066665648405,
+          "std_time_seconds": 0.0003158412933718558,
+          "min_time_seconds": 0.012075399998138892,
+          "max_time_seconds": 0.01274589999957243,
+          "avg_memory_mb": 0.005208333333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0005084000003989786,
+          "std_time_seconds": 7.189283779399231e-05,
+          "min_time_seconds": 0.00042050000047311187,
+          "max_time_seconds": 0.0005966000026091933,
+          "avg_memory_mb": 0.0234375,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "speedup_ratio": 24.630343540168028,
+        "winner": "polars"
+      },
+      {
+        "operation": "missing_value_handling",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.002405733333337897,
+          "std_time_seconds": 0.00012626116816055662,
+          "min_time_seconds": 0.002283899997564731,
+          "max_time_seconds": 0.0025797000016609672,
+          "avg_memory_mb": 0.01953125,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.00035289999990103144,
+          "std_time_seconds": 3.7109836790867e-05,
+          "min_time_seconds": 0.0003037999995285645,
+          "max_time_seconds": 0.0003934999986086041,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "speedup_ratio": 6.817039767675176,
+        "winner": "polars"
+      },
+      {
+        "operation": "quantile_calculation",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0013422666670521721,
+          "std_time_seconds": 7.437303845941133e-05,
+          "min_time_seconds": 0.0012443000014172867,
+          "max_time_seconds": 0.0014244000012695324,
+          "avg_memory_mb": -0.020833333333333332,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            3,
+            3
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0005508999990221733,
+          "std_time_seconds": 0.0001129594910840693,
+          "min_time_seconds": 0.00039649999962421134,
+          "max_time_seconds": 0.0006635999998252373,
+          "avg_memory_mb": 0.08333333333333333,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1,
+            6
+          ]
+        },
+        "speedup_ratio": 2.4364978570242233,
+        "winner": "polars"
+      }
+    ],
+    "summary": {
+      "total_benchmarks": 8,
+      "pandas_wins": 0,
+      "polars_wins": 8,
+      "average_speedup_ratio": 5.943806933747682,
+      "median_speedup_ratio": 2.7948438324975244,
+      "overall_winner": "polars"
+    }
+  },
+  "10000_rows": {
+    "benchmark_timestamp": 1755467902.5576189,
+    "data_info": {
+      "shape": [
+        10000,
+        10
+      ],
+      "columns": [
+        "timestamp",
+        "city",
+        "temperature",
+        "humidity",
+        "pressure",
+        "latitude",
+        "longitude",
+        "wind_speed",
+        "precipitation",
+        "cloud_cover"
+      ],
+      "size_mb": 1.2551536560058594
+    },
+    "benchmarks": [
+      {
+        "operation": "basic_aggregation",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0035634666674013715,
+          "std_time_seconds": 0.00017781339148440105,
+          "min_time_seconds": 0.0034267000010004267,
+          "max_time_seconds": 0.0038146000006236136,
+          "avg_memory_mb": -0.0546875,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            5
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0011319333316350821,
+          "std_time_seconds": 4.943900789589012e-05,
+          "min_time_seconds": 0.0010642999986885116,
+          "max_time_seconds": 0.0011810999967565294,
+          "avg_memory_mb": 0.26171875,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            6
+          ]
+        },
+        "speedup_ratio": 3.1481241587381565,
+        "winner": "polars"
+      },
+      {
+        "operation": "filtering",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0011074666666293826,
+          "std_time_seconds": 0.00016033999887064495,
+          "min_time_seconds": 0.0009548000016366132,
+          "max_time_seconds": 0.0013289999988046475,
+          "avg_memory_mb": -0.028645833333333332,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            3447,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.000517333332633522,
+          "std_time_seconds": 2.3038709682043006e-05,
+          "min_time_seconds": 0.0004870000011578668,
+          "max_time_seconds": 0.0005427999967650976,
+          "avg_memory_mb": 0.203125,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            3447,
+            10
+          ]
+        },
+        "speedup_ratio": 2.140721652308281,
+        "winner": "polars"
+      },
+      {
+        "operation": "sorting",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.002903066667689321,
+          "std_time_seconds": 0.00019024570734893698,
+          "min_time_seconds": 0.0026443999995535705,
+          "max_time_seconds": 0.0030965000005380716,
+          "avg_memory_mb": 0.3802083333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.001514833333203569,
+          "std_time_seconds": 4.049834066790093e-05,
+          "min_time_seconds": 0.0014793000009376556,
+          "max_time_seconds": 0.0015715000008640345,
+          "avg_memory_mb": 0.8841145833333334,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            10
+          ]
+        },
+        "speedup_ratio": 1.9164264503936659,
+        "winner": "polars"
+      },
+      {
+        "operation": "rolling_mean",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0012251666654871467,
+          "std_time_seconds": 9.285459426182e-05,
+          "min_time_seconds": 0.0011238999977649655,
+          "max_time_seconds": 0.001348199999483768,
+          "avg_memory_mb": 0.17838541666666666,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            11
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0003206333337099447,
+          "std_time_seconds": 1.6668198506009814e-05,
+          "min_time_seconds": 0.00030280000282800756,
+          "max_time_seconds": 0.0003428999989409931,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            11
+          ]
+        },
+        "speedup_ratio": 3.8210832645225596,
+        "winner": "polars"
+      },
+      {
+        "operation": "column_operations",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0016374333354178816,
+          "std_time_seconds": 0.00019117287629515165,
+          "min_time_seconds": 0.0014174000025377609,
+          "max_time_seconds": 0.001883500000985805,
+          "avg_memory_mb": 0.016927083333333332,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.00046813333271226537,
+          "std_time_seconds": 1.7237428859861436e-05,
+          "min_time_seconds": 0.0004501999974309001,
+          "max_time_seconds": 0.0004914000019198284,
+          "avg_memory_mb": 0.18229166666666666,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            13
+          ]
+        },
+        "speedup_ratio": 3.497792660759574,
+        "winner": "polars"
+      },
+      {
+        "operation": "datetime_operations",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.021099466666782973,
+          "std_time_seconds": 0.0012049601091094222,
+          "min_time_seconds": 0.019395399998757057,
+          "max_time_seconds": 0.021954800002276897,
+          "avg_memory_mb": 0.20703125,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0008062666662832877,
+          "std_time_seconds": 7.982290188216263e-05,
+          "min_time_seconds": 0.0007220999978017062,
+          "max_time_seconds": 0.0009135000000242144,
+          "avg_memory_mb": 0.02734375,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            13
+          ]
+        },
+        "speedup_ratio": 26.16934018126643,
+        "winner": "polars"
+      },
+      {
+        "operation": "missing_value_handling",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.003057599999010563,
+          "std_time_seconds": 0.0004004624408331447,
+          "min_time_seconds": 0.0025996000003942754,
+          "max_time_seconds": 0.003575099999579834,
+          "avg_memory_mb": 0.4583333333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0003316333337958592,
+          "std_time_seconds": 2.059196298203437e-05,
+          "min_time_seconds": 0.0003031999985978473,
+          "max_time_seconds": 0.0003513000010570977,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            10000,
+            10
+          ]
+        },
+        "speedup_ratio": 9.219821071704164,
+        "winner": "polars"
+      },
+      {
+        "operation": "quantile_calculation",
+        "data_shape": [
+          10000,
+          10
+        ],
+        "data_size_mb": 1.2551536560058594,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.001241699999809498,
+          "std_time_seconds": 8.043013475306035e-05,
+          "min_time_seconds": 0.0011527999995450955,
+          "max_time_seconds": 0.0013475999985530507,
+          "avg_memory_mb": 0.0013020833333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            3,
+            3
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0005713000003500687,
+          "std_time_seconds": 0.00012382344962478097,
+          "min_time_seconds": 0.00040609999996377155,
+          "max_time_seconds": 0.0007041999997454695,
+          "avg_memory_mb": 0.20833333333333334,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1,
+            6
+          ]
+        },
+        "speedup_ratio": 2.1734640277413555,
+        "winner": "polars"
+      }
+    ],
+    "summary": {
+      "total_benchmarks": 8,
+      "pandas_wins": 0,
+      "polars_wins": 8,
+      "average_speedup_ratio": 6.510846683429274,
+      "median_speedup_ratio": 3.3229584097488654,
+      "overall_winner": "polars"
+    }
+  },
+  "memory_analysis": {
+    "timestamp": 1755467904.9726813,
+    "data_sizes": [
+      1000,
+      5000,
+      10000
+    ],
+    "operations": [
+      "load",
+      "groupby",
+      "filter"
+    ],
+    "memory_benchmarks": [
+      {
+        "data_size": 1000,
+        "operations": {}
+      },
+      {
+        "data_size": 5000,
+        "operations": {}
+      },
+      {
+        "data_size": 10000,
+        "operations": {}
+      }
+    ]
+  },
+  "final_report": {
+    "report_timestamp": 1755467907.3629801,
+    "total_benchmarks": 8,
+    "pandas_wins": 0,
+    "polars_wins": 8,
+    "benchmark_results": [
+      {
+        "operation": "basic_aggregation",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.00310903333350628,
+          "std_time_seconds": 0.0002092144093537951,
+          "min_time_seconds": 0.002893400000175461,
+          "max_time_seconds": 0.003392300000996329,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            5
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.001325533334844901,
+          "std_time_seconds": 0.00018491245338345252,
+          "min_time_seconds": 0.001071900001988979,
+          "max_time_seconds": 0.001507500001025619,
+          "avg_memory_mb": -0.14322916666666666,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5,
+            6
+          ]
+        },
+        "speedup_ratio": 2.345496149947873,
+        "winner": "polars"
+      },
+      {
+        "operation": "filtering",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0009850000011889886,
+          "std_time_seconds": 2.8799422056148758e-05,
+          "min_time_seconds": 0.000961900001129834,
+          "max_time_seconds": 0.0010256000023218803,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            1021,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0005326666663070986,
+          "std_time_seconds": 9.854641228797209e-05,
+          "min_time_seconds": 0.00046039999870117754,
+          "max_time_seconds": 0.0006719999983033631,
+          "avg_memory_mb": -0.203125,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1021,
+            10
+          ]
+        },
+        "speedup_ratio": 1.8491864865842873,
+        "winner": "polars"
+      },
+      {
+        "operation": "sorting",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0021370333330802773,
+          "std_time_seconds": 0.0001984798273280109,
+          "min_time_seconds": 0.0019585999980336055,
+          "max_time_seconds": 0.0024138999979186337,
+          "avg_memory_mb": 0.0859375,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0009750000002289502,
+          "std_time_seconds": 9.070571350397954e-05,
+          "min_time_seconds": 0.0009037000017997343,
+          "max_time_seconds": 0.0011029999986931216,
+          "avg_memory_mb": 0.020833333333333332,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "speedup_ratio": 2.1918290590548284,
+        "winner": "polars"
+      },
+      {
+        "operation": "rolling_mean",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0010992333348743462,
+          "std_time_seconds": 3.354244395289196e-05,
+          "min_time_seconds": 0.0010518000017327722,
+          "max_time_seconds": 0.0011234000012336764,
+          "avg_memory_mb": -0.0013020833333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            11
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0002653666670084931,
+          "std_time_seconds": 2.302756707225828e-05,
+          "min_time_seconds": 0.00023290000171982683,
+          "max_time_seconds": 0.000283800000033807,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            11
+          ]
+        },
+        "speedup_ratio": 4.142318804641598,
+        "winner": "polars"
+      },
+      {
+        "operation": "column_operations",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.0015019666667891822,
+          "std_time_seconds": 0.00011296378050193775,
+          "min_time_seconds": 0.0013700999988941476,
+          "max_time_seconds": 0.0016460000006190967,
+          "avg_memory_mb": -0.028645833333333332,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.00041726666798543494,
+          "std_time_seconds": 3.892088778970004e-05,
+          "min_time_seconds": 0.0003634000022429973,
+          "max_time_seconds": 0.00045400000090012327,
+          "avg_memory_mb": 0.052083333333333336,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "speedup_ratio": 3.599536656116538,
+        "winner": "polars"
+      },
+      {
+        "operation": "datetime_operations",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.01278213333353051,
+          "std_time_seconds": 9.626426403008587e-05,
+          "min_time_seconds": 0.012646000002860092,
+          "max_time_seconds": 0.012851200001023244,
+          "avg_memory_mb": 0.005208333333333333,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0006021333332076514,
+          "std_time_seconds": 1.2506088687461756e-05,
+          "min_time_seconds": 0.0005849999979545828,
+          "max_time_seconds": 0.00061450000066543,
+          "avg_memory_mb": 0.00390625,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            13
+          ]
+        },
+        "speedup_ratio": 21.228077949842497,
+        "winner": "polars"
+      },
+      {
+        "operation": "missing_value_handling",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.002480366665016239,
+          "std_time_seconds": 0.0002196066540409827,
+          "min_time_seconds": 0.002215999997133622,
+          "max_time_seconds": 0.002753699998720549,
+          "avg_memory_mb": 0.0234375,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0003221333317924291,
+          "std_time_seconds": 2.13844694404178e-05,
+          "min_time_seconds": 0.0003051999992749188,
+          "max_time_seconds": 0.00035229999775765464,
+          "avg_memory_mb": 0.0,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            5000,
+            10
+          ]
+        },
+        "speedup_ratio": 7.699813773429992,
+        "winner": "polars"
+      },
+      {
+        "operation": "quantile_calculation",
+        "data_shape": [
+          5000,
+          10
+        ],
+        "data_size_mb": 0.6277017593383789,
+        "iterations": 3,
+        "pandas": {
+          "success": true,
+          "avg_time_seconds": 0.001220033331871188,
+          "std_time_seconds": 7.44992331485279e-05,
+          "min_time_seconds": 0.0011587999979383312,
+          "max_time_seconds": 0.001324900000327034,
+          "avg_memory_mb": -0.03515625,
+          "result_type": "<class 'pandas.core.frame.DataFrame'>",
+          "result_shape": [
+            3,
+            3
+          ]
+        },
+        "polars": {
+          "success": true,
+          "avg_time_seconds": 0.0004084999976233424,
+          "std_time_seconds": 5.72122952472548e-05,
+          "min_time_seconds": 0.00032779999673948623,
+          "max_time_seconds": 0.0004538999965006951,
+          "avg_memory_mb": 0.01171875,
+          "result_type": "<class 'polars.dataframe.frame.DataFrame'>",
+          "result_shape": [
+            1,
+            6
+          ]
+        },
+        "speedup_ratio": 2.9866177208552163,
+        "winner": "polars"
+      }
+    ],
+    "summary_statistics": {
+      "average_speedup": 5.755359575059104,
+      "median_speedup": 3.293077188485877,
+      "max_speedup": 21.228077949842497,
+      "min_speedup": 1.8491864865842873
+    },
+    "recommendations": [
+      "Polars outperformed pandas in 8/8 benchmarks. Consider using Polars for better performance.",
+      "Use Polars for: basic_aggregation, filtering, sorting, rolling_mean, column_operations, datetime_operations, missing_value_handling, quantile_calculation",
+      "Polars generally uses less memory - consider for memory-constrained environments"
+    ]
+  }
+}
