@@ -1,0 +1,201 @@
+# Weather Data Pipeline - Production Environment
+# Optimized for production deployment with security and performance considerations
+
+version: '3.8'
+
+services:
+  # Main weather pipeline application
+  weather-app:
+    build:
+      context: .
+      dockerfile: Containerfile
+      target: runtime
+    image: weather-pipeline:${VERSION:-latest}
+    container_name: weather-pipeline-app-prod
+    restart: always
+    ports:
+      - "8050:8050"
+    environment:
+      - WEATHER_ENV=production
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=weather_data
+      - DB_USER=weather_user
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - WEATHER_API_WEATHERAPI_KEY_FILE=/run/secrets/weatherapi_key
+      - WEATHER_API_OPENWEATHER_API_KEY_FILE=/run/secrets/openweather_key
+    volumes:
+      - app_data:/app/data
+      - app_logs:/app/logs
+    secrets:
+      - db_password
+      - weatherapi_key
+      - openweather_key
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-m", "src.weather_pipeline.core.health", "--readiness"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+    networks:
+      - weather-network
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+
+  # PostgreSQL database - production configuration
+  postgres:
+    image: postgres:15-alpine
+    container_name: weather-pipeline-db-prod
+    restart: always
+    ports:
+      - "127.0.0.1:5432:5432"  # Bind to localhost only
+    environment:
+      POSTGRES_DB: weather_data
+      POSTGRES_USER: weather_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./docker/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+    secrets:
+      - db_password
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weather_user -d weather_data"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - weather-network
+    security_opt:
+      - no-new-privileges:true
+
+  # Redis - production configuration
+  redis:
+    image: redis:7-alpine
+    container_name: weather-pipeline-cache-prod
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"  # Bind to localhost only
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+      --tcp-keepalive 60
+      --timeout 300
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    networks:
+      - weather-network
+    security_opt:
+      - no-new-privileges:true
+
+  # Nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    container_name: weather-pipeline-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - weather-app
+    networks:
+      - weather-network
+    security_opt:
+      - no-new-privileges:true
+
+  # Log aggregation
+  fluentd:
+    image: fluent/fluentd:v1.16-1
+    container_name: weather-pipeline-fluentd
+    restart: always
+    volumes:
+      - ./docker/fluentd/fluent.conf:/fluentd/etc/fluent.conf:ro
+      - app_logs:/app/logs:ro
+      - nginx_logs:/nginx/logs:ro
+    ports:
+      - "24224:24224"
+    networks:
+      - weather-network
+
+networks:
+  weather-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  app_data:
+    driver: local
+  app_logs:
+    driver: local
+  nginx_logs:
+    driver: local
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  weatherapi_key:
+    file: ./secrets/weatherapi_key.txt
+  openweather_key:
+    file: ./secrets/openweather_key.txt

@@ -109,43 +109,101 @@ def check() -> None:
     
     console.print("[yellow]Checking system health...[/yellow]")
     
-    health_table = Table(title="System Health Check")
-    health_table.add_column("Component", style="cyan")
-    health_table.add_column("Status", style="green")
-    health_table.add_column("Details")
-    
-    # Check configuration
+    # Run comprehensive health check
     try:
-        config_status = "✓ OK"
-        config_details = f"Environment: {settings.environment.value}"
-        health_table.add_row("Configuration", config_status, config_details)
+        from .core.health import HealthChecker
+        
+        async def run_health_check():
+            checker = HealthChecker()
+            return await checker.check_health()
+        
+        health_status = asyncio.run(run_health_check())
+        
+        # Display results in a nice table
+        health_table = Table(title="System Health Check")
+        health_table.add_column("Component", style="cyan")
+        health_table.add_column("Status", style="green")
+        health_table.add_column("Details")
+        
+        # Overall status
+        status_color = {
+            "healthy": "green",
+            "degraded": "yellow", 
+            "unhealthy": "red"
+        }.get(health_status.status, "white")
+        
+        health_table.add_row(
+            "Overall Status",
+            f"[{status_color}]{health_status.status.upper()}[/{status_color}]",
+            f"Uptime: {health_status.uptime:.1f}s"
+        )
+        
+        # Individual component checks
+        for component, check_result in health_status.checks.items():
+            status = check_result.get("status", "unknown")
+            if status == "ok":
+                status_text = "[green]✓ OK[/green]"
+            elif status == "warning":
+                status_text = "[yellow]⚠ WARNING[/yellow]"
+            else:
+                status_text = "[red]✗ ERROR[/red]"
+            
+            details = check_result.get("error", "")
+            if not details and "warnings" in check_result:
+                details = ", ".join(check_result["warnings"])
+            if not details and "message" in check_result:
+                details = check_result["message"]
+            
+            health_table.add_row(component.title(), status_text, details)
+        
+        console.print(health_table)
+        
+        # Exit with appropriate code
+        if health_status.status == "unhealthy":
+            raise typer.Exit(1)
+        
     except Exception as e:
-        health_table.add_row("Configuration", "✗ ERROR", str(e))
-    
-    # Check logging
-    try:
-        logger.info("Testing logging configuration")
-        health_table.add_row("Logging", "✓ OK", f"Level: {settings.logging.level.value}")
-    except Exception as e:
-        health_table.add_row("Logging", "✗ ERROR", str(e))
-    
-    # Check data directory
-    try:
-        if settings.data_dir.exists():
-            health_table.add_row("Data Directory", "✓ OK", str(settings.data_dir))
-        else:
-            health_table.add_row("Data Directory", "⚠ MISSING", f"Run 'weather-pipeline init' to create")
-    except Exception as e:
-        health_table.add_row("Data Directory", "✗ ERROR", str(e))
-    
-    # Check dependency injection
-    try:
-        container = get_container()
-        health_table.add_row("DI Container", "✓ OK", "Dependency injection ready")
-    except Exception as e:
-        health_table.add_row("DI Container", "✗ ERROR", str(e))
-    
-    console.print(health_table)
+        # Fallback to basic health check
+        console.print(f"[red]Advanced health check failed: {e}[/red]")
+        console.print("[yellow]Running basic health check...[/yellow]")
+        
+        health_table = Table(title="Basic System Health Check")
+        health_table.add_column("Component", style="cyan")
+        health_table.add_column("Status", style="green")
+        health_table.add_column("Details")
+        
+        # Check configuration
+        try:
+            config_status = "✓ OK"
+            config_details = f"Environment: {settings.environment.value}"
+            health_table.add_row("Configuration", config_status, config_details)
+        except Exception as e:
+            health_table.add_row("Configuration", "✗ ERROR", str(e))
+        
+        # Check logging
+        try:
+            logger.info("Testing logging configuration")
+            health_table.add_row("Logging", "✓ OK", f"Level: {settings.logging.level.value}")
+        except Exception as e:
+            health_table.add_row("Logging", "✗ ERROR", str(e))
+        
+        # Check data directory
+        try:
+            if settings.data_dir.exists():
+                health_table.add_row("Data Directory", "✓ OK", str(settings.data_dir))
+            else:
+                health_table.add_row("Data Directory", "⚠ MISSING", f"Run 'weather-pipeline init' to create")
+        except Exception as e:
+            health_table.add_row("Data Directory", "✗ ERROR", str(e))
+        
+        # Check dependency injection
+        try:
+            container = get_container()
+            health_table.add_row("DI Container", "✓ OK", "Dependency injection ready")
+        except Exception as e:
+            health_table.add_row("DI Container", "✗ ERROR", str(e))
+        
+        console.print(health_table)
 
 
 @app.command()

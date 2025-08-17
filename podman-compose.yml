@@ -1,0 +1,139 @@
+# Weather Data Pipeline - Development Environment
+# This file sets up a complete development environment with all services
+
+version: '3.8'
+
+services:
+  # Main weather pipeline application
+  weather-app:
+    build:
+      context: .
+      dockerfile: Containerfile
+      target: runtime
+    container_name: weather-pipeline-app
+    restart: unless-stopped
+    ports:
+      - "8050:8050"  # Dashboard
+      - "8000:8000"  # API (if enabled)
+    environment:
+      - WEATHER_ENV=development
+      - LOG_LEVEL=DEBUG
+      - LOG_FORMAT=json
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=weather_data
+      - DB_USER=weather_user
+      - DB_PASSWORD=weather_pass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # API keys should be set in .env file
+      - WEATHER_API_WEATHERAPI_KEY=${WEATHER_API_WEATHERAPI_KEY:-}
+      - WEATHER_API_OPENWEATHER_API_KEY=${WEATHER_API_OPENWEATHER_API_KEY:-}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      # For development: mount source code for hot reload
+      - ./src:/app/src:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-m", "src.weather_pipeline.core.health", "--readiness"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - weather-network
+
+  # PostgreSQL database for data storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: weather-pipeline-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: weather_data
+      POSTGRES_USER: weather_user
+      POSTGRES_PASSWORD: weather_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weather_user -d weather_data"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - weather-network
+
+  # Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    container_name: weather-pipeline-cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - weather-network
+
+  # Monitoring and observability
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: weather-pipeline-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - weather-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: weather-pipeline-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - weather-network
+
+networks:
+  weather-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
