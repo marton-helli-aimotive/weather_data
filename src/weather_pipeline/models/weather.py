@@ -161,6 +161,8 @@ class DataQualityMetrics(BaseModel):
     missing_temperature: int = Field(ge=0, description="Records with missing temperature")
     missing_humidity: int = Field(ge=0, description="Records with missing humidity")
     outliers_detected: int = Field(ge=0, description="Number of outliers detected")
+    duplicate_records: int = Field(ge=0, default=0, description="Number of duplicate records")
+    anomaly_count: int = Field(ge=0, default=0, description="Number of anomalies detected")
     
     # Calculated metrics
     completeness_score: float = Field(ge=0.0, le=1.0, description="Data completeness score")
@@ -177,3 +179,20 @@ class DataQualityMetrics(BaseModel):
         if self.valid_records > self.total_records:
             raise ValueError("Valid records cannot exceed total records")
         return self
+    
+    def get_overall_score(self) -> float:
+        """Get the overall quality score."""
+        return self.quality_score
+    
+    @property
+    def missing_percentage(self) -> float:
+        """Calculate the percentage of missing data."""
+        if self.total_records == 0:
+            return 0.0
+        missing_count = self.missing_temperature + self.missing_humidity
+        return (missing_count / (self.total_records * 2)) * 100  # 2 fields per record
+    
+    @property
+    def missing_values(self) -> int:
+        """Get the total count of missing values."""
+        return self.missing_temperature + self.missing_humidity

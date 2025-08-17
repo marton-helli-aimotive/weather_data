@@ -262,34 +262,37 @@ class TestMultiProviderClientIntegration:
     @pytest.mark.asyncio
     async def test_fallback_mechanism(self, mock_api_responses):
         """Test fallback mechanism when primary provider fails."""
-        providers_config = {
-            WeatherProvider.WEATHERAPI: {"api_key": "test_key1"},
-            WeatherProvider.SEVEN_TIMER: {}
-        }
+        providers = [WeatherProvider.WEATHERAPI, WeatherProvider.SEVEN_TIMER]
+        api_keys = {WeatherProvider.WEATHERAPI: "test_key1"}
         
         multi_client = WeatherClientFactory.create_multi_provider_client(
-            providers_config
+            providers=providers,
+            api_keys=api_keys
         )
         coordinates = Coordinates(latitude=51.5074, longitude=-0.1278)
         
         call_count = 0
         
-        async def mock_get_side_effect(*args, **kwargs):
-            nonlocal call_count
-            call_count += 1
-            
-            mock_response = AsyncMock()
-            if "weatherapi" in str(args[0]):  # WeatherAPI call
-                mock_response.status = 503  # Service unavailable
-                mock_response.text = AsyncMock(return_value="Service Unavailable")
-            else:  # 7timer call
-                mock_response.status = 200
-                mock_response.json = AsyncMock(return_value=mock_api_responses["7timer"])
-            
-            return mock_response
-        
         with patch('aiohttp.ClientSession.get') as mock_get:
-            mock_get.return_value.__aenter__.side_effect = mock_get_side_effect
+            # Setup a function that returns different responses based on URL
+            def mock_get_context_manager(*args, **kwargs):
+                nonlocal call_count
+                call_count += 1
+                
+                mock_response = AsyncMock()
+                if "weatherapi" in str(args[0]):  # WeatherAPI call
+                    mock_response.status = 503  # Service unavailable
+                    mock_response.text = AsyncMock(return_value="Service Unavailable")
+                else:  # 7timer call
+                    mock_response.status = 200
+                    mock_response.json = AsyncMock(return_value=mock_api_responses["7timer"])
+                
+                # Create a context manager that returns the mock response
+                context_manager = AsyncMock()
+                context_manager.__aenter__.return_value = mock_response
+                return context_manager
+            
+            mock_get.side_effect = mock_get_context_manager
             
             weather_data = await multi_client.get_current_weather(
                 coordinates, "London", "UK"
@@ -301,14 +304,15 @@ class TestMultiProviderClientIntegration:
     @pytest.mark.asyncio
     async def test_provider_selection_strategy(self):
         """Test different provider selection strategies."""
-        providers_config = {
-            WeatherProvider.WEATHERAPI: {"api_key": "test_key1"},
-            WeatherProvider.OPENWEATHER: {"api_key": "test_key2"},
-            WeatherProvider.SEVEN_TIMER: {}
+        providers = [WeatherProvider.WEATHERAPI, WeatherProvider.OPENWEATHER, WeatherProvider.SEVEN_TIMER]
+        api_keys = {
+            WeatherProvider.WEATHERAPI: "test_key1",
+            WeatherProvider.OPENWEATHER: "test_key2"
         }
         
         multi_client = WeatherClientFactory.create_multi_provider_client(
-            providers_config
+            providers=providers,
+            api_keys=api_keys
         )
         
         # Test that all providers are available
@@ -383,13 +387,12 @@ class TestAPIClientMetrics:
 
     def test_metrics_aggregation_multi_provider(self):
         """Test metrics aggregation from multi-provider client."""
-        providers_config = {
-            WeatherProvider.WEATHERAPI: {"api_key": "test_key1"},
-            WeatherProvider.SEVEN_TIMER: {}
-        }
+        providers = [WeatherProvider.WEATHERAPI, WeatherProvider.SEVEN_TIMER]
+        api_keys = {WeatherProvider.WEATHERAPI: "test_key1"}
         
         multi_client = WeatherClientFactory.create_multi_provider_client(
-            providers_config
+            providers=providers,
+            api_keys=api_keys
         )
         
         # Get metrics from each client

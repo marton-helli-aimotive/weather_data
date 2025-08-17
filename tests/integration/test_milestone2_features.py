@@ -32,7 +32,7 @@ class TestMilestone2Integration:
         # Test 7Timer (no API key required)
         seven_timer_client = WeatherClientFactory.create_client(WeatherProvider.SEVEN_TIMER)
         assert seven_timer_client is not None
-        assert seven_timer_client.get_circuit_breaker_state() in ["CLOSED", "OPEN", "HALF_OPEN"]
+        assert seven_timer_client.get_circuit_breaker_state() in ["closed", "open", "half_open"]
         
         # Test WeatherAPI if key available
         if api_keys[WeatherProvider.WEATHERAPI]:
@@ -41,7 +41,7 @@ class TestMilestone2Integration:
                 api_key=api_keys[WeatherProvider.WEATHERAPI]
             )
             assert weatherapi_client is not None
-            assert weatherapi_client.get_circuit_breaker_state() in ["CLOSED", "OPEN", "HALF_OPEN"]
+            assert weatherapi_client.get_circuit_breaker_state() in ["closed", "open", "half_open"]
 
     @pytest.mark.integration
     def test_multi_provider_client_creation(self, api_keys):
@@ -64,7 +64,7 @@ class TestMilestone2Integration:
         """Test circuit breaker states for different providers."""
         seven_timer_client = WeatherClientFactory.create_client(WeatherProvider.SEVEN_TIMER)
         state = seven_timer_client.get_circuit_breaker_state()
-        assert state in ["CLOSED", "OPEN", "HALF_OPEN"]
+        assert state in ["closed", "open", "half_open"]
         
         if api_keys[WeatherProvider.WEATHERAPI]:
             weatherapi_client = WeatherClientFactory.create_client(
@@ -72,7 +72,7 @@ class TestMilestone2Integration:
                 api_key=api_keys[WeatherProvider.WEATHERAPI]
             )
             state = weatherapi_client.get_circuit_breaker_state()
-            assert state in ["CLOSED", "OPEN", "HALF_OPEN"]
+            assert state in ["closed", "open", "half_open"]
 
     @pytest.mark.asyncio
     @pytest.mark.integration
@@ -142,7 +142,7 @@ class TestMilestone2Integration:
         assert isinstance(metrics, dict)
         assert "circuit_breaker_state" in metrics
         assert "available_tokens" in metrics
-        assert metrics["circuit_breaker_state"] in ["CLOSED", "OPEN", "HALF_OPEN"]
+        assert metrics["circuit_breaker_state"] in ["closed", "open", "half_open"]
         assert isinstance(metrics["available_tokens"], (int, float))
 
     @pytest.mark.integration
@@ -232,7 +232,7 @@ class TestMilestone2Integration:
         
         # Circuit breaker pattern implemented
         assert hasattr(seven_timer_client, 'get_circuit_breaker_state')
-        assert seven_timer_client.get_circuit_breaker_state() in ["CLOSED", "OPEN", "HALF_OPEN"]
+        assert seven_timer_client.get_circuit_breaker_state() in ["closed", "open", "half_open"]
         
         # Rate limiting and retry logic
         assert hasattr(seven_timer_client, 'get_metrics')

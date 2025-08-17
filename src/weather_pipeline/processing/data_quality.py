@@ -117,6 +117,8 @@ class DataQualityMonitor:
             missing_temperature=quality_results.get("missing_temperature", 0),
             missing_humidity=quality_results.get("missing_humidity", 0),
             outliers_detected=quality_results.get("outliers_detected", 0),
+            duplicate_records=quality_results.get("complete_duplicates", 0) + quality_results.get("key_column_duplicates", 0),
+            anomaly_count=quality_results.get("outliers_detected", 0),  # Use outliers as anomalies
             completeness_score=completeness_score,
             quality_score=overall_quality_score,
             data_time_range_start=time_range_start,

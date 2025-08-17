@@ -175,7 +175,7 @@ class WeatherAPIResponse(BaseAPIResponse):
         # Add forecast data if available
         if self.forecast and "forecastday" in self.forecast:
             for forecast_day in self.forecast["forecastday"]:
-                for hour_data in forecast_day["hour"]:
+                for hour_data in forecast_day.hour:
                     timestamp = datetime.fromisoformat(hour_data["time"].replace(" ", "T")).replace(tzinfo=timezone.utc)
                     
                     point = WeatherDataPoint(
