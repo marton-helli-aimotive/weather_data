@@ -6,7 +6,7 @@ import pandas as pd
 import polars as pl
 from datetime import datetime, timedelta
 
-from weather_pipeline.processing import (
+from src.weather_pipeline.processing import (
     TimeSeriesAnalyzer,
     GeospatialAnalyzer,
     FeatureEngineer,

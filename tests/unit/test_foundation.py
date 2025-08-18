@@ -2,9 +2,9 @@
 
 import pytest
 from pathlib import Path
-from weather_pipeline.config import get_settings, Settings
-from weather_pipeline.core import get_container, DIContainer
-from weather_pipeline.models import WeatherProvider, Coordinates
+from src.weather_pipeline.config import get_settings, Settings
+from src.weather_pipeline.core import get_container, DIContainer
+from src.weather_pipeline.models import WeatherProvider, Coordinates
 
 
 def test_settings_loading():

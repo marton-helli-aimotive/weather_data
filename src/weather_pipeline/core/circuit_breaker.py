@@ -30,7 +30,7 @@ class CircuitBreakerConfig(BaseModel):
     failure_threshold: int = Field(default=5, description="Number of failures to open circuit")
     success_threshold: int = Field(default=3, description="Number of successes to close circuit from half-open")
     timeout: float = Field(default=60.0, description="Timeout in seconds before trying half-open")
-    expected_exception: type = Field(default=Exception, description="Exception type that triggers circuit breaker")
+    expected_exception: type[Exception] = Field(default=Exception, description="Exception type that triggers circuit breaker")
 
 
 class CircuitBreakerMetrics(BaseModel):
@@ -55,7 +55,7 @@ class CircuitBreaker:
         self.metrics = CircuitBreakerMetrics()
         self._lock = asyncio.Lock()
     
-    async def call(self, func: Callable[..., T], *args, **kwargs) -> T:
+    async def call(self, func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
         """Execute function with circuit breaker protection."""
         async with self._lock:
             await self._check_state()
@@ -147,7 +147,7 @@ class CircuitBreaker:
 class CircuitBreakerRegistry:
     """Registry to manage multiple circuit breakers."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         self._breakers: dict[str, CircuitBreaker] = {}
     
     def get_breaker(self, name: str, config: Optional[CircuitBreakerConfig] = None) -> CircuitBreaker:

@@ -114,10 +114,9 @@ class WeatherDataPoint(BaseModel):
         return v
     
     model_config = {
-        # Allow validation of datetime objects
-        "json_encoders": {
-            datetime: lambda v: v.isoformat(),
-        }
+        # Use Pydantic v2 serialization instead of deprecated json_encoders
+        "ser_json_timedelta": "float",
+        "arbitrary_types_allowed": True,
     }
 
 

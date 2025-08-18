@@ -235,7 +235,7 @@ markers = [
 asyncio_mode = "auto"
 
 [tool.coverage.run]
-source = ["weather_pipeline"]
+source = ["src/weather_pipeline"]
 branch = true
 
 [tool.coverage.report]

@@ -9,14 +9,14 @@ from pathlib import Path
 from unittest.mock import patch, AsyncMock, Mock
 from datetime import datetime, timezone, timedelta
 
-from weather_pipeline.api import WeatherClientFactory, MultiProviderWeatherClient
-from weather_pipeline.models import WeatherProvider, Coordinates
-from weather_pipeline.processing import (
+from src.weather_pipeline.api import WeatherClientFactory, MultiProviderWeatherClient
+from src.weather_pipeline.models import WeatherProvider, Coordinates
+from src.weather_pipeline.processing import (
     TimeSeriesAnalyzer, GeospatialAnalyzer, FeatureEngineer,
     DataQualityMonitor, CacheManager
 )
-from weather_pipeline.config import get_settings
-from weather_pipeline.core import get_container
+from src.weather_pipeline.config import get_settings
+from src.weather_pipeline.core import get_container
 
 
 @pytest.mark.e2e

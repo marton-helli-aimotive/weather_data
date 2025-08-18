@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from ..core.circuit_breaker import CircuitBreakerConfig, circuit_breaker_registry
 from ..core.resilience import RateLimiterConfig, RetryConfig, ResilientAPIClient
@@ -104,12 +104,12 @@ class BaseWeatherClient(ABC):
         pass
     
     @abstractmethod
-    def _build_url(self, endpoint: str, **params) -> str:
+    def _build_url(self, endpoint: str, **params: Any) -> str:
         """Build API request URL."""
         pass
     
     @abstractmethod
-    def _parse_response(self, response_data: dict, coordinates: Coordinates, city: str, country: Optional[str] = None) -> APIResponse:
+    def _parse_response(self, response_data: dict[str, Any], coordinates: Coordinates, city: str, country: Optional[str] = None) -> APIResponse:
         """Parse API response into standard format."""
         pass
     
@@ -155,7 +155,7 @@ class BaseWeatherClient(ABC):
         """Get current circuit breaker state."""
         return self.circuit_breaker.get_state().value
     
-    def get_metrics(self) -> dict:
+    def get_metrics(self) -> dict[str, Any]:
         """Get client metrics."""
         return {
             "provider": self.provider.value,

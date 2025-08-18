@@ -6,11 +6,11 @@ from decimal import Decimal
 from typing import Dict, Any
 from pydantic import ValidationError
 
-from weather_pipeline.models.weather import (
+from src.weather_pipeline.models.weather import (
     Coordinates, WeatherDataPoint, WeatherProvider,
     DataQualityMetrics, LocationInfo, WeatherAlert
 )
-from weather_pipeline.models.api_responses import (
+from src.weather_pipeline.models.api_responses import (
     WeatherAPIResponse, OpenWeatherMapResponse, SevenTimerResponse
 )
 

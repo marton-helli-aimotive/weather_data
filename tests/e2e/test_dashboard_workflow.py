@@ -6,17 +6,17 @@ import sys
 from datetime import datetime, timedelta
 from unittest.mock import patch, MagicMock
 
-from weather_pipeline.core.container import get_container
-from weather_pipeline.dashboard.data_manager import DashboardDataManager
-from weather_pipeline.dashboard.auth import AuthManager
-from weather_pipeline.dashboard.exports import ExportManager
-from weather_pipeline.dashboard.components import (
+from src.weather_pipeline.core.container import get_container
+from src.weather_pipeline.dashboard.data_manager import DashboardDataManager
+from src.weather_pipeline.dashboard.auth import AuthManager
+from src.weather_pipeline.dashboard.exports import ExportManager
+from src.weather_pipeline.dashboard.components import (
     create_time_series_plot,
     create_geographic_map,
     create_3d_surface_plot,
     create_animated_plot
 )
-from weather_pipeline.config.settings import Settings
+from src.weather_pipeline.config.settings import Settings
 
 
 class TestDashboardE2E:
@@ -88,7 +88,7 @@ class TestDashboardE2E:
         parameters = ['temperature', 'humidity', 'pressure']
         
         # Import the functions to test them directly without mocking
-        from weather_pipeline.dashboard.components import create_time_series_plot, create_geographic_map
+        from src.weather_pipeline.dashboard.components import create_time_series_plot, create_geographic_map
         
         # Test time series plot creation
         fig_ts = create_time_series_plot(sample_weather_data, parameters)
@@ -101,7 +101,7 @@ class TestDashboardE2E:
         assert hasattr(fig_geo, 'data')  # Check it's a Plotly figure
 
         # Test 3D surface plot creation (may fail with test data due to geometry)
-        from weather_pipeline.dashboard.components import create_3d_surface_plot
+        from src.weather_pipeline.dashboard.components import create_3d_surface_plot
         try:
             fig_3d = create_3d_surface_plot(sample_weather_data)
             assert fig_3d is not None
@@ -113,7 +113,7 @@ class TestDashboardE2E:
             assert "QhullError" in str(e) or "precision error" in str(e)
 
         # Test animated plot creation
-        from weather_pipeline.dashboard.components import create_animated_plot
+        from src.weather_pipeline.dashboard.components import create_animated_plot
         fig_anim = create_animated_plot(sample_weather_data, frame_index=0)
         assert fig_anim is not None
         assert hasattr(fig_anim, 'data')  # Check it's a Plotly figure

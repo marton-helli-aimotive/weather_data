@@ -6,8 +6,8 @@ import os
 from datetime import datetime, timezone
 from unittest.mock import patch
 
-from weather_pipeline.api import WeatherClientFactory
-from weather_pipeline.models.weather import WeatherProvider, Coordinates, WeatherDataPoint
+from src.weather_pipeline.api import WeatherClientFactory
+from src.weather_pipeline.models.weather import WeatherProvider, Coordinates, WeatherDataPoint
 
 
 class TestMilestone2Integration:

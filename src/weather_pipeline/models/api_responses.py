@@ -19,9 +19,9 @@ class BaseAPIResponse(BaseModel):
     response_timestamp: datetime = Field(..., description="When the response was received")
     
     model_config = {
-        "json_encoders": {
-            datetime: lambda v: v.isoformat(),
-        }
+        # Use Pydantic v2 serialization instead of deprecated json_encoders
+        "ser_json_timedelta": "float",
+        "arbitrary_types_allowed": True,
     }
 
 
@@ -73,9 +73,13 @@ class SevenTimerResponse(BaseAPIResponse):
                 timestamp=timestamp,
                 temperature=temperature,
                 humidity=humidity,
+                pressure=None,  # 7Timer doesn't provide pressure
                 wind_speed=wind_speed,
                 wind_direction=wind_direction,
+                precipitation=None,  # 7Timer doesn't provide precipitation
+                visibility=None,  # 7Timer doesn't provide visibility
                 cloud_cover=cloud_cover,
+                uv_index=None,  # 7Timer doesn't provide UV index
                 city=city,
                 country=country,
                 coordinates=coordinates,
@@ -312,6 +316,7 @@ class OpenWeatherMapResponse(BaseAPIResponse):
             precipitation=precipitation,
             visibility=visibility_km,
             cloud_cover=cloud_cover,
+            uv_index=None,  # OpenWeather basic API doesn't provide UV index
             city=city,
             country=country or (self.sys.country if self.sys else None),
             coordinates=coordinates,

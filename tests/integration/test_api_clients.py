@@ -6,12 +6,12 @@ from unittest.mock import AsyncMock, patch, Mock
 from datetime import datetime, timezone
 from typing import Dict, Any
 
-from weather_pipeline.api import (
+from src.weather_pipeline.api import (
     WeatherAPIClient, OpenWeatherMapClient, SevenTimerClient,
     WeatherClientFactory, MultiProviderWeatherClient
 )
-from weather_pipeline.models import WeatherProvider, Coordinates
-from weather_pipeline.core.circuit_breaker import CircuitBreakerConfig
+from src.weather_pipeline.models import WeatherProvider, Coordinates
+from src.weather_pipeline.core.circuit_breaker import CircuitBreakerConfig
 
 
 class TestWeatherAPIClientIntegration:
@@ -411,7 +411,7 @@ class TestRateLimitingIntegration:
     @pytest.mark.asyncio
     async def test_rate_limiting_enforcement(self):
         """Test that rate limiting is enforced."""
-        from weather_pipeline.core.resilience import RateLimiterConfig
+        from src.weather_pipeline.core.resilience import RateLimiterConfig
         
         # Create client with very restrictive rate limiting
         rate_limiter_config = RateLimiterConfig(

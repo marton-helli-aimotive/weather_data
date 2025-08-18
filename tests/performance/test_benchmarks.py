@@ -12,12 +12,12 @@ import psutil
 import gc
 from typing import List, Dict, Any
 
-from weather_pipeline.processing import (
+from src.weather_pipeline.processing import (
     TimeSeriesAnalyzer, GeospatialAnalyzer, FeatureEngineer,
     PerformanceComparator, CacheManager
 )
-from weather_pipeline.api import WeatherAPIClient, MultiProviderWeatherClient
-from weather_pipeline.models import WeatherProvider, Coordinates
+from src.weather_pipeline.api import WeatherAPIClient, MultiProviderWeatherClient
+from src.weather_pipeline.models import WeatherProvider, Coordinates
 
 
 class PerformanceTimer:
@@ -277,7 +277,7 @@ class TestAPIClientPerformance:
     @pytest.mark.asyncio
     async def test_rate_limiting_performance(self):
         """Test performance impact of rate limiting."""
-        from weather_pipeline.core.resilience import RateLimiterConfig
+        from src.weather_pipeline.core.resilience import RateLimiterConfig
         
         # Client without rate limiting
         client_no_limit = WeatherAPIClient(api_key="test_key")

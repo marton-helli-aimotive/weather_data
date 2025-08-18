@@ -6,12 +6,12 @@ from typing import Dict, Any, List
 from datetime import datetime, timezone
 from pydantic import ValidationError
 
-from weather_pipeline.models.api_responses import (
+from src.weather_pipeline.models.api_responses import (
     WeatherAPIResponse, OpenWeatherMapResponse, SevenTimerResponse,
     WeatherAPILocation, WeatherAPICondition, WeatherAPICurrent,
     OpenWeatherMapMain, OpenWeatherMapWind, OpenWeatherMapClouds
 )
-from weather_pipeline.models.weather import WeatherProvider, WeatherDataPoint
+from src.weather_pipeline.models.weather import WeatherProvider, WeatherDataPoint
 
 
 class TestWeatherAPIContract:
@@ -290,8 +290,8 @@ class TestOpenWeatherMapContract:
         assert isinstance(response.clouds, OpenWeatherMapClouds)
         
         # Verify coordinate structure
-        assert response.coord["lat"] == 51.5074
-        assert response.coord["lon"] == -0.1278
+        assert response.coord.lat == 51.5074
+        assert response.coord.lon == -0.1278
 
     def test_openweathermap_weather_array_schema(self, mock_api_responses):
         """Test OpenWeatherMap weather array schema."""
@@ -311,10 +311,10 @@ class TestOpenWeatherMapContract:
         
         # Each weather item should have required fields
         weather_item = response.weather[0]
-        assert "id" in weather_item
-        assert "main" in weather_item
-        assert "description" in weather_item
-        assert "icon" in weather_item
+        assert hasattr(weather_item, "id") and weather_item.id is not None
+        assert hasattr(weather_item, "main") and weather_item.main is not None
+        assert hasattr(weather_item, "description") and weather_item.description is not None
+        assert hasattr(weather_item, "icon") and weather_item.icon is not None
 
 
 class TestSevenTimerContract:

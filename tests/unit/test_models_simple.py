@@ -4,7 +4,7 @@ import pytest
 from datetime import datetime, timezone
 from decimal import Decimal
 
-from weather_pipeline.models.weather import WeatherDataPoint, Coordinates, WeatherProvider
+from src.weather_pipeline.models.weather import WeatherDataPoint, Coordinates, WeatherProvider
 
 
 class TestWeatherDataPoint:

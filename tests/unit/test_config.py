@@ -5,7 +5,7 @@ import os
 from unittest.mock import patch
 from decimal import Decimal
 
-from weather_pipeline.config.settings import (
+from src.weather_pipeline.config.settings import (
     Settings, APISettings, DatabaseSettings, RedisSettings,
     LoggingSettings, Environment, LogLevel, get_settings
 )

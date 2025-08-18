@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import random
 import time
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Callable, NoReturn, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -28,7 +28,7 @@ class RetryConfig(BaseModel):
     max_delay: float = Field(default=60.0, description="Maximum delay in seconds")
     exponential_base: float = Field(default=2.0, description="Exponential backoff base")
     jitter: bool = Field(default=True, description="Add random jitter to delays")
-    retry_exceptions: tuple = Field(default=(Exception,), description="Exception types to retry on")
+    retry_exceptions: tuple[type[Exception], ...] = Field(default=(Exception,), description="Exception types to retry on")
 
 
 class RateLimiter:
@@ -85,7 +85,7 @@ class RetryHandler:
         self.name = name
         self.config = config
     
-    async def execute(self, func: Callable[..., T], *args, **kwargs) -> T:
+    async def execute(self, func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
         """Execute function with retry logic."""
         last_exception = None
         
@@ -152,8 +152,8 @@ class ResilientAPIClient:
     async def execute_with_resilience(
         self,
         func: Callable[..., T],
-        *args,
-        **kwargs
+        *args: Any,
+        **kwargs: Any
     ) -> T:
         """Execute function with rate limiting and retry logic."""
         # Acquire rate limit token
@@ -166,7 +166,7 @@ class ResilientAPIClient:
 class RateLimiterRegistry:
     """Registry to manage multiple rate limiters."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         self._limiters: dict[str, RateLimiter] = {}
     
     def get_limiter(self, name: str, config: RateLimiterConfig) -> RateLimiter:

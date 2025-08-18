@@ -5,9 +5,9 @@ import asyncio
 from unittest.mock import AsyncMock, patch
 from abc import ABC, abstractmethod
 
-from weather_pipeline.api.base import BaseWeatherClient, WeatherAPIError
-from weather_pipeline.core.resilience import RateLimiterConfig, RetryConfig
-from weather_pipeline.models.weather import WeatherProvider
+from src.weather_pipeline.api.base import BaseWeatherClient, WeatherAPIError
+from src.weather_pipeline.core.resilience import RateLimiterConfig, RetryConfig
+from src.weather_pipeline.models.weather import WeatherProvider
 
 
 class TestAPIIntegration:

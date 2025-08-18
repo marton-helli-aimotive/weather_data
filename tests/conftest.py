@@ -11,13 +11,13 @@ import numpy as np
 from datetime import datetime, timezone, timedelta
 
 # Import from our application
-from weather_pipeline.config import get_settings, Settings
-from weather_pipeline.core import get_container
-from weather_pipeline.models import (
+from src.weather_pipeline.config import get_settings, Settings
+from src.weather_pipeline.core import get_container
+from src.weather_pipeline.models import (
     WeatherProvider, Coordinates, WeatherDataPoint,
     WeatherAPIResponse, OpenWeatherMapResponse, SevenTimerResponse
 )
-from weather_pipeline.api import (
+from src.weather_pipeline.api import (
     WeatherAPIClient, OpenWeatherMapClient, SevenTimerClient,
     WeatherClientFactory
 )

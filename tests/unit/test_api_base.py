@@ -5,11 +5,11 @@ from unittest.mock import AsyncMock, Mock, patch
 from datetime import datetime, timezone
 import aiohttp
 
-from weather_pipeline.api.base import BaseWeatherClient, WeatherAPIError
-from weather_pipeline.api.factory import WeatherClientFactory
-from weather_pipeline.models import WeatherProvider, Coordinates
-from weather_pipeline.core.resilience import RateLimiterConfig, RetryConfig
-from weather_pipeline.core.circuit_breaker import CircuitBreakerConfig
+from src.weather_pipeline.api.base import BaseWeatherClient, WeatherAPIError
+from src.weather_pipeline.api.factory import WeatherClientFactory
+from src.weather_pipeline.models import WeatherProvider, Coordinates
+from src.weather_pipeline.core.resilience import RateLimiterConfig, RetryConfig
+from src.weather_pipeline.core.circuit_breaker import CircuitBreakerConfig
 
 
 class MockWeatherClient(BaseWeatherClient):
@@ -255,7 +255,7 @@ class TestAPIClientExceptions:
 
     def test_weather_api_error_types(self):
         """Test different types of WeatherAPIError."""
-        from weather_pipeline.api.base import (
+        from src.weather_pipeline.api.base import (
             WeatherAPIAuthenticationError,
             WeatherAPIRateLimitError,
             WeatherAPINotFoundError,
