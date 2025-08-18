@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import math
 import random
+import time
 from dataclasses import dataclass
 from types import TracebackType
 
@@ -66,19 +67,20 @@ class AsyncRateLimiter:
         self._rate = float(rate)
         self._capacity = float(burst if burst is not None else max(1, int(math.ceil(rate))))
         self._tokens = self._capacity
-        self._updated = asyncio.get_event_loop().time()
+        # Use monotonic clock decoupled from asyncio loop
+        self._updated = time.monotonic()
         self._lock = asyncio.Lock()
 
     async def acquire(self) -> None:
         async with self._lock:
-            now = asyncio.get_event_loop().time()
+            now = time.monotonic()
             elapsed = now - self._updated
             self._updated = now
             self._tokens = min(self._capacity, self._tokens + elapsed * self._rate)
             if self._tokens < 1.0:
                 wait = (1.0 - self._tokens) / self._rate
                 await asyncio.sleep(wait)
-                now2 = asyncio.get_event_loop().time()
+                now2 = time.monotonic()
                 elapsed2 = now2 - self._updated
                 self._updated = now2
                 self._tokens = min(self._capacity, self._tokens + elapsed2 * self._rate)

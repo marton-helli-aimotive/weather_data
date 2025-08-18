@@ -43,7 +43,7 @@ class ReliableHttpClient:
             if not decision.should_retry:
                 if isinstance(last_err, CircuitOpenError):
                     raise last_err
-                raise RetryError(str(last_err))
+                raise RetryError(str(last_err)) from last_err
             await asyncio.sleep(decision.delay)
 
     async def _try_once(
@@ -51,13 +51,13 @@ class ReliableHttpClient:
     ) -> tuple[HttpResponse | None, BaseException | None]:
         try:
             if self.breaker:
-                await self.breaker.before(asyncio.get_event_loop().time())
+                await self.breaker.before(asyncio.get_running_loop().time())
             resp = await self.inner.send(request)
             if self.breaker:
-                if 200 <= resp.status < 500 or resp.status == 501:
+                if 200 <= resp.status < 400:
                     await self.breaker.record_success()
                 else:
-                    await self.breaker.record_failure(asyncio.get_event_loop().time())
+                    await self.breaker.record_failure(asyncio.get_running_loop().time())
             # retry on status codes
             if resp.status in self.retry.retry_on_status:
                 # Signal retry by surfacing an error; outer loop decides backoff
@@ -65,5 +65,5 @@ class ReliableHttpClient:
             return resp, None
         except Exception as e:  # noqa: BLE001 - bubble through retry policy
             if self.breaker:
-                await self.breaker.record_failure(asyncio.get_event_loop().time())
+                await self.breaker.record_failure(asyncio.get_running_loop().time())
             return None, e
