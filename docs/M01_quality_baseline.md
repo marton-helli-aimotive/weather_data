@@ -21,4 +21,10 @@ Local workflow (once tools are installed):
 
 CI: GitHub Actions workflow runs above checks on pushes/PRs.
 
+Files added by M01:
+- `.github/workflows/ci.yml` – CI workflow for quality gates
+- `.pre-commit-config.yaml` – local hooks for ruff/black/isort/mypy and hygiene
+- `.editorconfig` – consistent editor settings
+- `.gitignore` – ignores caches, envs, and scaffolding files
+
 Open questions tracked in `INDEX.md` have answers; no new ones introduced by M01.

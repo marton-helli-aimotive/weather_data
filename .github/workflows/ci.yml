@@ -1,31 +1,43 @@
-name: ci
+name: CI
 
 on:
   push:
-    branches: [ main, master, gpt5 ]
+    branches: [ "**" ]
   pull_request:
 
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
-      - name: Set up Python
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install tooling
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install deps
         run: |
-          uv venv
-          uv pip install ruff black isort mypy pytest pytest-asyncio
-      - name: Lint & type check
+          uv sync --dev
+
+      - name: Lint (ruff)
         run: |
           uv run ruff check .
+
+      - name: Format check (ruff/black/isort)
+        run: |
           uv run ruff format --check .
           uv run black --check .
           uv run isort --check-only .
-          uv run mypy src
-      - name: Tests
+
+      - name: Type check (mypy)
+        run: |
+          uv run mypy
+
+      - name: Tests (pytest)
         run: |
           uv run pytest -q

@@ -21,6 +21,10 @@ ENV/
 # Pytest
 .pytest_cache/
 
+# Coverage
+.coverage*
+htmlcov/
+
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -30,6 +34,7 @@ ENV/
 
 # VSCode
 .vscode/
+.idea/
 
 # Local env
 .env
@@ -38,3 +43,6 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Project
+starter_code.py
